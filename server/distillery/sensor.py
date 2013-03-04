@@ -1,3 +1,4 @@
+from flask import request
 from distillery import app
 
 def getSensorData(still_id, sensor_id):
@@ -6,7 +7,7 @@ def getSensorData(still_id, sensor_id):
 def setSensorData(still_id, sensor_id, value):
 	return
 
-@app.route("/still/<int:still_id>/sensor/<int:sensor_id>/", methods=['GET', 'POST'])
+@app.route("/still/<int:still_id>/sensor/<int:sensor_id>", methods=['GET', 'POST'])
 def sensor(still_id, sensor_id):
 	if request.method == "GET":
 		sensor_val = getSensorData(still_id, sensor_id)
