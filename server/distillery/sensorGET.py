@@ -1,6 +1,6 @@
 from flask import request
 from distillery import app
-
+import databaseHelper as dbHelper
 class datum():
 	def __init__(self, dt, temp, name="datum"):
 		self.name = name
@@ -47,3 +47,10 @@ def sensor(still_id, sensor_id, seconds_history=100):
 @app.route("/still/<int:still_id>/sensors", methods=['GET'])
 def sensorList(still_id):
 	return "{0,1,2}"
+
+@app.route("/debug", methods=['GET'])
+def debug():
+	cur = dbHelper.dbCursor()
+	cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+	return str(cur.fetchall())
+
