@@ -51,6 +51,12 @@ def sensorList(still_id):
 @app.route("/debug", methods=['GET'])
 def debug():
 	cur = dbHelper.dbCursor()
-	cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
-	return str(cur.fetchall())
+	cur.execute("SELECT * FROM sensorData")
+
+	s = ""
+	rows = cur.fetchall()
+	s += "%s\n" % len(rows)
+	for row in rows:
+		s += "%s\n" % str(row)	
+	return s
 

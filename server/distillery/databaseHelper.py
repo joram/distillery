@@ -30,5 +30,5 @@ def addSensorData(still_id, sensor_id, sensor_value):
 	checkSensor(still_id, sensor_id)
 	cursor = dbCursor()
 	dtime = datetime.datetime.now()
-	cursor.execute("INSERT INTO sensorData(still, sensor, time, value) values (?,?,?,?)" % (still_id, sensor_id, dtime, sensor_value))
+	cursor.execute("INSERT INTO sensorData(still, sensor, time, value) values (?,?,?,?)", (still_id, sensor_id, dtime, sensor_value))
 
