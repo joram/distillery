@@ -1,6 +1,7 @@
 from flask import g
 import sqlite3
 from datetime import datetime, timedelta
+from functools import wraps
 
 from distillery import app
 
@@ -37,56 +38,39 @@ def commit():
     return get_connection().commit()
 
 
-def check_still(still_id):
-    execute("create table if not exists stills(id INT)")
-    cursor = execute('SELECT * FROM stills WHERE id=?', (still_id,))
-    if not len(cursor.fetchall()):
-        execute("INSERT INTO stills (id) values (?)", (still_id,))
-        commit()
+def check_still(f):
+    """ Function decorator that creates still records as necessary """
+    @wraps(f)
+    def wrapper(still_id, *args, **kwargs):
+        execute("create table if not exists stills(id INT)")
+        cursor = execute('SELECT * FROM stills WHERE id=?', (still_id,))
+        if not len(cursor.fetchall()):
+            execute("INSERT INTO stills (id) values (?)", (still_id,))
+            commit()
+        return f(still_id, *args, **kwargs)
+
+    return wrapper
 
 
-def check_sensor(still_id, sensor_id):
-    check_still(still_id)
-    execute("create table if not exists sensors(still INT, id INT)")
-    execute("""
-        create table if not exists sensor_data (
-            still INT,
-            sensor INT,
-            time DATETIME,
-            value TEXT(32)
-        )
-    """)
-    res = execute('SELECT * FROM sensors WHERE still = ? AND id = ?',
-                  (still_id, sensor_id))
-    if not len(res.fetchall()):
-        execute("INSERT INTO sensors(still, id) values (?, ?)",
-                (still_id, sensor_id))
-        commit()
+def check_sensor(f):
+    "Function decorator that creates still and sensor records as necessary"
+    @wraps(f)
+    def wrapper(still_id, sensor_id, *args, **kwargs):
+        execute("create table if not exists sensors(still INT, id INT)")
+        execute("""
+            create table if not exists sensor_data (
+                still INT,
+                sensor INT,
+                time DATETIME,
+                value TEXT(32)
+            )
+        """)
+        res = execute('SELECT * FROM sensors WHERE still = ? AND id = ?',
+                      (still_id, sensor_id))
+        if not len(res.fetchall()):
+            execute("INSERT INTO sensors(still, id) values (?, ?)",
+                    (still_id, sensor_id))
+            commit()
+        return f(still_id, sensor_id, *args, **kwargs)
 
-
-def add_sensor_data(still_id, sensor_id, sensor_value):
-    check_sensor(still_id, sensor_id)
-    dtime = datetime.now()
-    sql = """INSERT INTO sensor_data (still, sensor, time, value)
-             values (?,?,?,?)"""
-    execute(sql, (still_id, sensor_id, dtime, sensor_value))
-    commit()
-    return {'still':  still_id,
-            'sensor': sensor_id,
-            'time':   dtime.isoformat(),
-            'value':  sensor_value}
-
-
-def get_sensor_history(still, sensor, seconds_history):
-    check_sensor(still, sensor)
-    sql = """SELECT time, value FROM sensor_data
-             WHERE still = ? AND sensor = ? AND time >= ?
-             ORDER BY time DESC"""
-    time = datetime.now() - timedelta(seconds=seconds_history)
-    rows = execute(sql, (still, sensor, time)).fetchall()
-
-    return [dict(row) for row in rows]
-
-
-def get_sensor_list(still):
-    return execute("SELECT id FROM sensors WHERE still=?", (still,))
+    return check_still(wrapper)

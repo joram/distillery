@@ -8,6 +8,5 @@ def favicon():
     return app.send_static_file("favicon.ico")
 
 
-import distillery.sensorGET
-import distillery.sensorPOST
+import distillery.sensors
 import distillery.actuator
