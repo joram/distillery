@@ -2,12 +2,13 @@ from flask import g
 import sqlite3
 from datetime import datetime, timedelta
 from functools import wraps
-
 from distillery import app
-
+import os
 
 def _connect():
-    conn = sqlite3.connect("database.sqlite3")
+    base_directory = os.path.abspath(os.path.dirname(__file__))+"/.."
+    db_file = "%s/database.sqlite3" % base_directory
+    conn = sqlite3.connect(db_file)
     conn.row_factory = sqlite3.Row
     return conn
 
