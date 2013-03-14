@@ -1,23 +1,19 @@
-from distillery import app
-
-from distillery import database
-from distillery import sensors
+from distillery import app, database, sensors
 import datetime
 import math
+        
 
 def fillData(still_id, sensor_id, func, stime, etime):
+    readingDelta = datetime.timedelta(seconds=5)
     dtime = stime
-    while dtime <= etime:
-	with app.test_request_context():
-   	    app.preprocess_request()
-	    
-	    sensors.add_sensor_data(still_id, sensor_id, dtime, func(dtime))
-	    dtime += readingDelta
-
+    with app.test_request_context():
+        app.preprocess_request()
+        while dtime <= etime:
+            sensors.add_sensor_data(still_id, sensor_id, dtime, func(dtime))
+            dtime += readingDelta
 
 endTime = datetime.datetime.now()
 startTime = endTime - datetime.timedelta(hours=1)
-readingDelta = datetime.timedelta(seconds=5)
 still_id = 1
 
 def horizontal(t):

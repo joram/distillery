@@ -26,7 +26,7 @@ def sensor_history(still_id, sensor_id):
 @db.check_sensor
 def add_sensor_data(still_id, sensor_id, dtime=datetime.now(), value=None):
     sql = """INSERT INTO sensor_data (still, sensor, time, value)
-             values (?,?,?,?)"""
+        values (?,?,?,?)"""
     if value==None:
 	value = request.data
     db.execute(sql, (still_id, sensor_id, dtime, value))
