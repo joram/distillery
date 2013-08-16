@@ -10,3 +10,4 @@ def favicon():
 
 import distillery.sensors
 import distillery.actuator
+import distillery.graph

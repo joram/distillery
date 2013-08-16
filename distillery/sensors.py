@@ -2,11 +2,22 @@ from datetime import datetime, timedelta
 from flask import jsonify, request, url_for
 from distillery import app
 import database as db
+from flask import request, make_response
 
+def any_response(data):
+  allowed_origins = ['http://192.168.1.162']
+  response = make_response(data)
+  origin = request.headers.get('Origin')
+  if origin:
+    response.headers['Access-Control-Allow-Origin'] = origin
+  return response
 
 @app.route("/still/<int:still_id>/sensor/<int:sensor_id>",
            methods=['GET'])
+@db.check_still
+@db.check_sensor
 def sensor_history(still_id, sensor_id):
+ 
     try:
         seconds_history = int(request.args['seconds_history'])
     except (KeyError, TypeError):
@@ -18,7 +29,12 @@ def sensor_history(still_id, sensor_id):
 
     time = datetime.now() - timedelta(seconds=seconds_history)
     rows = db.execute(sql, (still_id, sensor_id, time)).fetchall()
-    return jsonify(history=[dict(row) for row in rows])
+
+    origin = request.headers.get('Origin')
+    print "origin: %s" % origin
+    r = jsonify(history=[dict(row) for row in rows])
+    r = any_response(r)
+    return r
 
 
 @app.route("/still/<int:still_id>/sensor/<int:sensor_id>",
@@ -29,6 +45,7 @@ def add_sensor_data(still_id, sensor_id, dtime=datetime.now(), value=None):
         values (?,?,?,?)"""
     if value==None:
 	value = request.data
+    print "val:%s" % value
     db.execute(sql, (still_id, sensor_id, dtime, value))
     db.commit()
     return jsonify({'still':  still_id,
@@ -56,3 +73,4 @@ def sensor_list(still_id):
 def debug():
     rows = [dict(row) for row in db.execute("SELECT * FROM sensor_data")]
     return jsonify(rows=rows)
+

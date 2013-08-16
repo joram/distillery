@@ -30,7 +30,6 @@ def close_database(exc):
     if hasattr(g, 'db'):
         g.db.close()
 
-
 def execute(*args):
     return get_connection().execute(*args)
 
