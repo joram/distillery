@@ -14,9 +14,7 @@ def _connect():
 
 
 def get_connection():
-    """
-    Return the request-context database connection or get a new one.
-    """
+    """ Return the request-context database connection or get a new one. """
     return getattr(g, 'db', False) or _connect()
 
 
@@ -45,6 +43,7 @@ def check_still(f):
         execute("create table if not exists stills(id INT)")
         cursor = execute('SELECT * FROM stills WHERE id=?', (still_id,))
         if not len(cursor.fetchall()):
+            print "creating still: %s" % (still_id)
             execute("INSERT INTO stills (id) values (?)", (still_id,))
             commit()
         return f(still_id, *args, **kwargs)
@@ -62,15 +61,15 @@ def check_sensor(f):
                 still INT,
                 sensor INT,
                 time DATETIME,
-                value TEXT(32)
+                value TEXT(32),
+				id INTEGER PRIMARY KEY AUTOINCREMENT
             )
         """)
-        res = execute('SELECT * FROM sensors WHERE still = ? AND id = ?',
-                      (still_id, sensor_id))
+        res = execute('SELECT * FROM sensors WHERE still = ? AND id = ?', (still_id, sensor_id))
         if not len(res.fetchall()):
-            execute("INSERT INTO sensors(still, id) values (?, ?)",
-                    (still_id, sensor_id))
+            print "creating still(%s)'s sensor: %s" % (still_id, sensor_id)
+            execute("INSERT INTO sensors(still, id) values (?, ?)", (still_id, sensor_id))
             commit()
         return f(still_id, sensor_id, *args, **kwargs)
 
-    return check_still(wrapper)
+    return wrapper

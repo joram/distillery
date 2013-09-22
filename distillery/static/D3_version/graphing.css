@@ -1,0 +1,40 @@
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+ 
+.line {
+  fill: none;
+  stroke-width: 1.5px;
+ 
+}
+ 
+body { 
+	background: #FFFFFF; 
+	background-repeat:repeat-x;
+	text-align: center;
+	font: 10px sans-serif;
+}
+ 
+.dot {
+ 
+  stroke-width: 1.5px;
+}
+ 
+.dot-selected {
+  fill: #B0C4DE;
+  stroke: #B0C4DE;
+  stroke-width: 1.5px;
+}
+ 
+.metrics-container {
+	width: auto;
+	height: auto;
+	padding: 10px 10px 10px 20px;
+	border-style: solid;
+	border-width: 1px;
+	float: left;
+	margin-left: 20px;
+	margin-top: 20px;
+}
