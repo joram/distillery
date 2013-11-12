@@ -3,16 +3,12 @@
 		<link href="examples.css" rel="stylesheet" type="text/css">
 		<script language="javascript" type="text/javascript" src="jquery.js"></script>
 		<script language="javascript" type="text/javascript" src="jquery.flot.js"></script>
+		<script language="javascript" type="text/javascript" src="underscore-min.js"></script>
 		<script language="javascript" type="text/javascript" src="graph.js"></script>
 	</head>
-	<body>
-		<div class="demo-container">
+	<body onload="init_graph()">
+		<div class="demo-container" >
 			<div id="placeholder" class="demo-placeholder" />
 		</div>
-		<button class="dataUpdate">Poll for data</button>		
-		<script type="text/javascript">
-			initialize_graph();
-		</script>
-
 	</body>
 </html>

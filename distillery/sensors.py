@@ -5,7 +5,7 @@ import database as db
 from flask import request, make_response
 
 def any_response(data):
-	allowed_origins = ['http://192.168.1.162']
+	allowed_origins = ['http://192.168.1.162', 'http://192']
 	response = make_response(data)
 	origin = request.headers.get('Origin')
 	if origin:
@@ -19,6 +19,19 @@ def get_arg(request, key, default=None):
 	except:
 		value = default
 	return value
+
+def sensor_reading_to_celcius(sensor_id, reading):
+	data = { 1: [0.759032258065, 0.227419354839],
+			 2: [0.756129032258, 0.229032258065],
+			 3: [0.72, 0.23064516129] }
+	
+	temp_change = 52.5-20
+	reading_change = data[sensor_id][0] - data[sensor_id][1]
+	slope = temp_change/reading_change
+	new_reading_change = data[sensor_id][0] - reading
+	temp = -slope*new_reading_change + 52.5
+	
+	return temp
 
 @app.route("/still/<int:still_id>/sensor/<int:sensor_id>",
            methods=['GET'])
@@ -39,7 +52,6 @@ def sensor_history(still_id, sensor_id):
 
 	# previous data wanted
 	previous_count = get_arg(request, 'previous_count')
-	print previous_count
 
 	# all data after last known index	
 	if not previous_count:
@@ -57,9 +69,25 @@ def sensor_history(still_id, sensor_id):
 		rows = handle.fetchall()
 		handle.close()
 
+	try:
+		calibrated_data = []
+		for row in rows:
+			temp = sensor_reading_to_celcius(sensor_id, float(row['value']))
+			row = dict(row)
+			
+			updated_row = {}
+			updated_row['value'] = temp
+			updated_row['time'] = row['time']
+			updated_row['id'] = row['id']
+			calibrated_data.append(updated_row)
+	except Exception as e:
+		print e
+
 	# return the data
 	r = jsonify({'count': len(rows),
-				 'history': [dict(row) for row in rows] })
+				 'still_id': still_id,
+				 'sensor_id': sensor_id,
+				 'history': calibrated_data })
 	r = any_response(r)
 	return r
 
