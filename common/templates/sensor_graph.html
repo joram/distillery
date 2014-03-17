@@ -1,0 +1,37 @@
+{% block includes %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    {% for sensor_name in sensor_data %}
+    data.addColumn('number', '{{ sensor_name }}');{% endfor %}
+
+    data.addRows({{ data_length }});
+
+    {% for sensor_name in sensor_data %}
+    {% with sensor_data|get:sensor_name as row_data %}
+    {% for value in row_data %}data.setCell({{ forloop.counter0 }}, {{ forloop.parentloop.counter0 }}, {{ value }});
+    {% endfor %}
+    {% endwith %}
+    {% endfor %}
+
+
+    var options = {
+      title: 'Sensor Data',
+      curveType: 'function',
+      hAxis: {title: 'Time', titleTextStyle: {color: 'black'}}
+    };
+
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div id="chart_div"></div>
+{% endblock %}

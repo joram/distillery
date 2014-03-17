@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{% block title %}Default Title{% endblock %}</title>
+  {% block includes %}{% endblock %}
+</head>
+
+<body>
+<div id='all_content'>
+{#    {% include "header.html" %}#}
+    <div class="content">
+    {% block content %}{% endblock %}
+    </div>
+</div>
+</body>
+</html>

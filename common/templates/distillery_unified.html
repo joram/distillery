@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Stills{% endblock %}
+
+{% block content %}
+    {% with "_"|add:still_id as UUID %}
+        {% with "/ajax/still/"|add:still_id|add:"/allsensors/?num_rows=50" as data_URI %}
+            {% include '_line_graph.html' %}
+        {% endwith %}
+    {% endwith %}
+{% endblock %}

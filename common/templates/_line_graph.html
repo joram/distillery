@@ -1,0 +1,48 @@
+
+<div id="line_graph{{ UUID }}">
+    <!-- {{ data_URI }} -->
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://jquery-csv.googlecode.com/files/jquery.csv-0.71.min.js"></script>
+
+    <script>
+        // load the visualization library from Google and set a listener
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+
+        // transform the CSV string into a 2-dimensional array
+        function cleanCSV(csvString){
+            var arrayData = $.csv.toArrays(csvString, {onParseValue: $.csv.hooks.castToScalar});
+            var data = new google.visualization.arrayToDataTable(arrayData);
+            return data;
+        }
+
+        // draw the initial chart
+        function drawChart() {
+            $.get("{{ data_URI }}", function(csvString) {
+                $options = {
+                    title: "Sensor Data",
+                    curveType: 'function',  // for smoothing the lines
+                    legend: { position: 'bottom' }
+                };
+
+                $chart = new google.visualization.LineChart(document.getElementById('chart{{ UUID }}'));
+                $chart.draw(cleanCSV(csvString), $options);
+            });
+
+            // create the inifinite loop of updates
+            setTimeout(updateChart, 5000);
+        }
+
+        // always updating
+        function updateChart(){
+            console.log("updating graph");
+            $.get("{{ data_URI }}", function(csvString) {
+                $chart.draw(cleanCSV(csvString), $options);
+                setTimeout(updateChart, 5000);
+            });
+        }
+   </script>
+
+    <div id="chart{{ UUID }}" style="width:100%; height:400px;"></div>
+</div>

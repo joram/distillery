@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Stills{% endblock %}
+
+{% block content %}
+{#  {% include '_still_runs.html' %}#}
+{#    {% with "/still/1/sensor/3/?num_rows=50" as data_URI %}#}
+    <!-- {{ sensor_ids }} -->
+    {% for sensor_id in sensor_ids %}
+        {% with "_"|add:still_id|add:"_"|add:sensor_id as UUID %}
+        {% with "/ajax/still/"|add:still_id|add:"/sensor/"|add:sensor_id|add:"/?num_rows=50" as data_URI %}
+            {% include '_line_graph.html' %}
+        {% endwith %}
+        {% endwith %}
+    {%  endfor %}
+{% endblock %}

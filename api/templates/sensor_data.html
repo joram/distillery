@@ -1,0 +1,7 @@
+{% for sensor_data in data %}
+[{{ sensor_data.sensor.distillery.still_id }},
+ {{ sensor_data.sensor.sensor_id }},
+ "{{ sensor_data.sensor.name }}",
+ [{% for datum in sensor_data.data %} ['{{ datum.datetime }}', {{ datum.value }}],
+  {% endfor %}]
+{% endfor %}
