@@ -11,8 +11,9 @@ def recent_data(request, still_id, sensor_id):
     still = Distillery.objects.get(still_id=still_id)
     sensor = Sensor.objects.get(distillery=still, id=sensor_id)
     data = TemperatureDatum.objects.filter(sensor=sensor).order_by('datetime')[:num_rows]
-    values = ["%s, %s" % (datum.datetime, datum.value) for datum in data]
-    return HttpResponse("time, %s\n%s" % (sensor.name, "\n".join(values)))
+    values = ["%s, %s" % (datum.datetime, datum.value) for datum in data if datum.value]
+    sensor_name = sensor.name if sensor.name else "sensor_%s" % sensor_id
+    return HttpResponse("time, %s\n%s" % (sensor_name, "\n".join(values)))
 
 
 # TODO IN THE _line_graph, do time better:
@@ -51,7 +52,7 @@ def recent_data_all_sensors(request, still_id):
 
     # first rows (titles)
     result_titles = ["time"]
-    result_titles.extend([sensor.name for sensor in sensors])
+    result_titles.extend([sensor.get_name for sensor in sensors])
     data = [result_titles]
     data.extend(result_data)
 

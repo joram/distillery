@@ -14,6 +14,10 @@ class Sensor(models.Model):
         if datums.count() > 0:
             return datums[0].value
         return -1
+    
+    @property
+    def get_name(self):
+        return self.name if self.name else "self_%s" % self.sensor_id
 
     def add_temp_datum(self, value, datetime):
         run = self.distillery.get_run(datum_datetime=datetime)

@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from common.models import Distillery, TemperatureDatum
+from common.models import Distillery, TemperatureDatum, Run
 
 
 def _get_still(still_id):
@@ -68,5 +68,14 @@ def still_sensor_list(request, still_id=0):
 def distillery(request, still_id):
     still, created = Distillery.objects.get_or_create(still_id=still_id)
     context = {'still': still}
-    print context
     return render_to_response('distillery/distillery.html', context)
+
+
+def run(request, still_id, run_id):
+    run = Run.objects.get(distillery__still_id=still_id, run_id=run_id)
+    context = {
+        'page': "runs",
+        'still': run.distillery,
+        'run': run
+    }
+    return render_to_response('distillery/run.html', context)

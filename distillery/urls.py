@@ -11,6 +11,7 @@ urlpatterns = patterns(
     url(r'^$', 'common.views.home.home', name='index'),
     url(r'^stills$', 'common.views.distilleries.distilleries', name='distilleries'),
     url(r'^recipes$', 'common.views.recipes.recipes', name='recipes'),
+    url(r'^still/(?P<still_id>\d+)/run/(?P<run_id>\d+)$', 'common.views.distillery.run'),
 
 
     # AJAX endpoints
@@ -18,9 +19,9 @@ urlpatterns = patterns(
     url(r'^ajax/still/(?P<still_id>\d+)/allsensors/$', 'common.views.sensor.recent_data_all_sensors'),
 
     # API endpoints
-    # url(r'^api/sensor/(?P<sensor_id>\d+)/run/(?P<run_id>\d+)$', 'api.views.sensor.sensor_data'),
-    # url(r'^api/sensor/(?P<sensor_id>\d+)$', 'api.views.sensor.sensor_data'),
-    # url(r'^api/run/(?P<run_id>\d+)$', 'api.views.sensor.sensor_data'),
+    url(r'^api/sensor/(?P<sensor_id>\d+)/run/(?P<run_id>\d+)$', 'api.views.sensor.sensor_data'),
+    url(r'^api/sensor/(?P<sensor_id>\d+)$', 'api.views.sensor.sensor_data'),
+    url(r'^api/run/(?P<run_id>\d+)$', 'api.views.sensor.sensor_data'),
 
     # static and admin stuffs
     url(r'^admin/', include(admin.site.urls)),

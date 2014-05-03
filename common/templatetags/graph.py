@@ -49,4 +49,25 @@ def unified_sensor_graph(still_id):
                }
 
     #print json.dumps(context['sensor_data'], sort_keys=True, indent=4, separators=(',', ': '))
-    return render_to_response('graphs/distillery_unified.html', context)
+    return render_to_response('graphs/distillery_unified.html', context).content
+
+
+# @register.simple_tag
+# def run_graph(run_id):
+#     current_run = Run.objects.get(run_id=run_id)
+#     still = current_run.distillery
+#
+#     sensor_data, data_length = _get_sensor_data(still, current_run, 0)
+#     sensor_ids = [str(sensor.id) for sensor in still.sensors]
+#
+#     context = {'still': still,
+#                'sensor_ids': sensor_ids,
+#                'sensor_data': sensor_data,
+#                'UUID': "_%s" % still.still_id,
+#                'data_URI': "/ajax/still/%s/allsensors/?num_rows=50" % still.still_id,
+#                'data_length': data_length,
+#                'data_length_range': range(data_length)
+#                }
+#
+#     #print json.dumps(context['sensor_data'], sort_keys=True, indent=4, separators=(',', ': '))
+#     return render_to_response('graphs/distillery_unified.html', context)

@@ -6,7 +6,7 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
-.col-md-4 {
+.col-md-4, .col-md-8 {
     margin-top:10px;
 }
 
@@ -25,5 +25,4 @@ h3 .still_state {
 .still_name {
     margin: 0;
     padding: 0;
-
 }

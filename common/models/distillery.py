@@ -54,12 +54,7 @@ class Distillery(models.Model):
         if delta.total_seconds() > 30:  # TODO: turn into setting
             return 'disconnected'
 
-       #  state = random.choice(['disconnected', 'idle', 'distilling'])
-       # # print state
-       #  return state
         return "disconnected"
-#        return "idle"
-#        return "distilling"
 
     def __unicode__(self):
         return u"%s's still: %s" % (self.user, self.name)
