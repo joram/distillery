@@ -1,5 +1,0 @@
-<div id="runs_list">
-{% for run in datum_counts %}
-<a href="/still/{{ still.still_id }}/run/{{ run.run.run_id }}" >{{ run.run.start_time|date }} ({{ run.count }})</a><br/>
-{% endfor %}
-</div>

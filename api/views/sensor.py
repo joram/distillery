@@ -28,12 +28,7 @@ def get_data(still_id=None, sensor_id=None, run_id=None):
 
 
 def sensor_data(request, still_id=None, sensor_id=None, run_id=None):
-    print request.method
-
-    if request.method == "POST":
-        print("sensor POST: %s, %s,  %s" % (still_id, sensor_id, run_id))
 
     if request.method == "GET":
-        print("sensor GET: %s, %s,  %s" % (still_id, sensor_id, run_id))
         data = get_data(still_id, sensor_id, run_id)
         return render_to_response("sensor_data.html", {'data': data})

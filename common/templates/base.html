@@ -2,16 +2,29 @@
 <html>
 
 <head>
-  <title>{% block title %}Default Title{% endblock %}</title>
-  {% block includes %}{% endblock %}
+    <title>{% block title %}D-Still Manager{% endblock %}</title>
+    {% block includes %}{% endblock %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/base.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<div id='all_content'>
-{#    {% include "header.html" %}#}
-    <div class="content">
-    {% block content %}{% endblock %}
+    {% include '_nav_bar.html' %}
+
+    <div class="container">
+        {% block content %}{% endblock %}
     </div>
-</div>
+
 </body>
 </html>
+
+

@@ -1,0 +1,9 @@
+{# TODO: ajax update this panel #}
+
+
+<h3>Currently:
+    <div class="still_state alert {% if still.current_state == "disconnected" %}alert-danger{% endif %}{% if still.current_state == "idle" %}alert-info{% endif %}{% if still.current_state == "distilling" %}alert-success{% endif %}">
+        {{ still.current_state }}
+    </div>
+</h3>
+

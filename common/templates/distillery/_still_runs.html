@@ -1,0 +1,21 @@
+{% load delta_time %}
+<div class="panel panel-info">
+    <div class="panel-heading">Runs</div>
+    <div class="panel-body">
+        <div class="row">
+            {% for run in still.runs %}
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">{{ forloop.counter0 }}</div>
+                        <div class="col-md-7">
+                            <a href="/still/{{ run.distillery.still_id }}/run/{{ run.run_id }}" >
+                                {{ run.recipe.name }} ({{ run.num_data_points }})
+                            </a>
+                        </div>
+                        <div class="col-md-3">{% timedelta run.time_elapsed_seconds %}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

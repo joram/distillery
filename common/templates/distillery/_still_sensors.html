@@ -1,0 +1,19 @@
+<div class="panel panel-info">
+    <div class="panel-heading">Sensors</div>
+    <div class="panel-body">
+
+        <div class="row">
+            {%  for sensor in still.sensors %}
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-2">{{ sensor.sensor_id }}</div>
+                    <div class="col-md-2"><div style="color:{{ sensor.colour }}; width:15px; height:15px; border:solid thin black;"></div></div>
+                    <div class="col-md-6">{{ sensor.name }}</div>
+                    <div class="col-md-2 text-center">{{ sensor.current_value }}C</div>
+                </div>
+            </div>
+            {%  endfor %}
+        </div>
+
+    </div>
+</div>

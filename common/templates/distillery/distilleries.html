@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="row">
+        {%  for still in distilleries %}
+            {% include "distillery/distillery_grid_view.html" %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

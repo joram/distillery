@@ -19,5 +19,5 @@ sensors = [
 for sensor in sensors:
     Sensor.objects.get_or_create(distillery=still,
                                  name=sensor['name'],
-                                 id=sensor['id'],
+                                 sensor_id=sensor['id'],
                                  colour=sensor['colour'])

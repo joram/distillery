@@ -1,0 +1,13 @@
+<div class="panel panel-info">
+    <div class="panel-heading"> General Information </div>
+    <div class="panel-body">
+        <ul class="list-group">
+            <li class="list-group-item text-center">
+                <h1 class="still_name">{{ still.name }}</h1>
+            </li>
+            <li class="list-group-item">
+                {% include "distillery/_still_state.html" %}
+            </li>
+        </ul>
+    </div>
+</div>

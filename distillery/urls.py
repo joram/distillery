@@ -7,7 +7,11 @@ urlpatterns = patterns(
     '',
 
     # browsing
-    url(r'^still/(?P<still_id>\d+)/$', 'common.views.distillery.distillery_unified'),
+    url(r'^still/(?P<still_id>\d+)/$', 'common.views.distillery.distillery', name='distillery'),
+    url(r'^$', 'common.views.home.home', name='index'),
+    url(r'^stills$', 'common.views.distilleries.distilleries', name='distilleries'),
+    url(r'^recipes$', 'common.views.recipes.recipes', name='recipes'),
+
 
     # AJAX endpoints
     url(r'^ajax/still/(?P<still_id>\d+)/sensor/(?P<sensor_id>\d+)/$', 'common.views.sensor.recent_data'),
@@ -20,5 +24,5 @@ urlpatterns = patterns(
 
     # static and admin stuffs
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+   # url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

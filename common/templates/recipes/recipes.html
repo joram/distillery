@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="row">
+        {%  for recipe in recipes %}
+            {%  include "recipes/recipe_grid_view.html" %}
+        {% endfor %}
+    </div>
+
+{% endblock %}
