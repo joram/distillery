@@ -1,5 +1,6 @@
 #!/usr/bin/python
-from common.models import Distillery, Sensor
+from datetime import datetime, timedelta
+from common.models import Distillery, Sensor, TemperatureDatum, Run
 
 STILL_NAME = 'bertha'
 
@@ -16,8 +17,19 @@ sensors = [
   'colour': "#FFFFFF",
   "id": 2},
 ]
-for sensor in sensors:
-    Sensor.objects.get_or_create(distillery=still,
-                                 name=sensor['name'],
-                                 sensor_id=sensor['id'],
-                                 colour=sensor['colour'])
+for s in sensors:
+    sensor, _ = Sensor.objects.get_or_create(
+        distillery=still,
+        name=s['name'],
+        sensor_id=s['id'],
+        colour=s['colour'])
+    run, _ = Run.objects.get_or_create(
+        distillery=still,
+        start_time=datetime.now(),
+        end_time=datetime.now())
+    for i in range(0, 100):
+        TemperatureDatum.objects.create(
+            sensor=sensor,
+            run=run,
+            value=20*sensors.index(s),
+            datetime=datetime.now() - timedelta(minutes=i))

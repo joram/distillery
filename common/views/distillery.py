@@ -68,6 +68,7 @@ def still_sensor_list(request, still_id=0):
 def distillery(request, still_id):
     still, created = Distillery.objects.get_or_create(still_id=still_id)
     context = {'still': still}
+    context['still'].name = "Distillery #%s" % still.still_id
     return render_to_response('distillery/distillery.html', context)
 
 

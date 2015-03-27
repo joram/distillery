@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from common.models import Run, Sensor
-from django.utils.timezone import timedelta, datetime, now as datetime_now
+from common.models import Run, Sensor, TemperatureDatum
+from django.utils.timezone import timedelta, now as datetime_now
 
 
 def time_in_range(start, end, x):
@@ -45,6 +45,12 @@ class Distillery(models.Model):
     def add_temp_datum(self, sensor_id, value, datetime=datetime_now()):
         sensor, _ = Sensor.objects.get_or_create(distillery=self, sensor_id=sensor_id)
         sensor.add_temp_datum(value, datetime)
+
+    def sensor_data(self, num_values=100):
+        data = {}
+        for sensor in self.sensors:
+            data[sensor.sensor_id] = TemperatureDatum.objects.filter(sensor=sensor).order_by('datetime')[:num_values]
+        return data
 
     @property
     def current_state(self):
