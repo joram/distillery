@@ -26,3 +26,18 @@ h3 .still_state {
     margin: 0;
     padding: 0;
 }
+
+
+.panel, .panel-body {
+    border-color: #101010;
+    background-color: #999999;
+}
+.panel-heading {
+    color: #999999;
+    border-color: black;
+    background-color: #101010;
+}
+
+.details_key, .details_value {
+    color: #101010;
+}
