@@ -10,7 +10,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-BASE_DIR = os.path.dirname(os.path.realpath(__file__)) 
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 DATABASES = {
@@ -124,7 +124,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-
+    'rest_framework',
     'common',
     'api',
 )
@@ -156,4 +156,12 @@ LOGGING = {
             'propagate': True,
         },
     }
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }

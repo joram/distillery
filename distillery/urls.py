@@ -1,6 +1,19 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+
+from rest_framework import routers
+
+from api.views import user
+from api.views import distillery
+from api.views import sensor
+
+router = routers.DefaultRouter()
+router.register(r'users', user.UserViewSet)
+router.register(r'groups', user.GroupViewSet)
+router.register(r'distillery', distillery.DistilleryViewSet)
+router.register(r'sensor', sensor.SensorViewSet)
+
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -22,8 +35,10 @@ urlpatterns = patterns(
     url(r'^api/sensor/(?P<sensor_id>\d+)/run/(?P<run_id>\d+)$', 'api.views.sensor.sensor_data'),
     url(r'^api/sensor/(?P<sensor_id>\d+)$', 'api.views.sensor.sensor_data'),
     url(r'^api/run/(?P<run_id>\d+)$', 'api.views.sensor.sensor_data'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-dj/', include(router.urls)),
 
     # static and admin stuffs
     url(r'^admin/', include(admin.site.urls)),
-   # url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    # url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
