@@ -6,6 +6,9 @@ from django.http import HttpResponse
 DEFAULT_NUM_ROWS = 10
 
 
+
+
+
 def recent_data(request, still_id, sensor_id):
     num_rows = request.GET.get('num_rows', DEFAULT_NUM_ROWS)
     still = Distillery.objects.get(still_id=still_id)

@@ -14,7 +14,7 @@ class Sensor(models.Model):
         if datums.count() > 0:
             return datums[0].value
         return -1
-    
+
     @property
     def get_name(self):
         return self.name if self.name else "self_%s" % self.sensor_id

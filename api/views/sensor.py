@@ -1,5 +1,17 @@
 from django.shortcuts import render_to_response
+
+from rest_framework import viewsets
+
 from common.models import Distillery, Run, TemperatureDatum, Sensor
+from common.serializers import SensorSerializer
+
+
+class SensorViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Sensor.objects.all()
+    serializer_class = SensorSerializer
 
 
 def get_data(still_id=None, sensor_id=None, run_id=None):
