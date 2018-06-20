@@ -25,6 +25,12 @@ def temperature():
 def api_temperature():
     return json.dumps(tempStore.json())
 
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+    
 def poll_temp():
     while running:
         for channel in range(0,8):
