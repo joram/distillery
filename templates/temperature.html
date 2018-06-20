@@ -1,0 +1,79 @@
+<html>
+	<head>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+		<script src="/static/color.js" type="text/javascript"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			var datasetColors = randomColor({count: 8, hue:"red"});
+			var chart;
+			$.ajax({
+				type: "GET",
+				dataType: "json",
+				url: "/api/temperatures",
+				success: initGraph,		
+			});
+	
+
+			function initGraph(data){
+				chart = new Chart($("#temperatureChart"), {
+	    				options: {},
+	        			type: 'line',
+		    			data:  {
+						datasets: jsonToGraphDatasets(data)
+					},
+				});
+				setInterval(updateGraph, 2000);
+			}
+
+			
+			function updateGraph(){
+				console.log("updating");
+				$.ajax({
+					type: "GET",
+					dataType: "json",
+					url: "/api/temperatures",
+					success: function(data){
+						datasets = jsonToGraphDatasets(data)
+						chart.data.datasets = datasets;
+						chart.options.animation = false;
+						chart.update();
+					},		
+				});
+			}
+
+			function jsonToGraphDatasets(data){
+				datasets = [];
+				keys = Object.keys(data).sort();
+				for(var i=0; i<keys.length; i++){
+					key = keys[i];
+					series = data[key];
+					seriesData = [];
+					for(var j=0; j<series.length; j++){
+					  datum = series[j];
+					  datum["t"] = new Date(datum["t"]);
+					  seriesData.push(datum);
+					}
+
+					datasets.push({
+						label: key,
+						data: seriesData,
+						color: datasetColors[i],
+						backgroundColor: "rgba(0,0,0,0)",
+					});
+				}
+				return datasets;
+			}
+			
+		</script>
+	</head>
+	<body>
+		<h1> Tempuratures </h1>
+		<canvas id="temperatureChart" style="width: 90%; height: 90%;"></canvas>
+		<p> {{ data }} </p>
+	</body>
+</html>
