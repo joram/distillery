@@ -2,13 +2,8 @@ import random
 import datetime
 
 
-class TmeSeriesStore(object):
+class TimeSeriesStore(object):
     TEMPERATURE_DATA = {}
-
-    def __init__(self, max_history=None):
-        if max_history is None:
-            max_history = datetime.timedelta(hours=1)
-        self.max_history = max_history
 
     def add_temp(self, name, value, time=None):
         if time is None:

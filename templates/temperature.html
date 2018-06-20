@@ -9,7 +9,8 @@
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
-			var datasetColors = randomColor({count: 8, hue:"red"});
+			var datasetColors = randomColor({count: 8, hue:"red", format:"rgba"});
+			console.log(datasetColors);
 			var chart;
 			$.ajax({
 				type: "GET",
@@ -59,10 +60,11 @@
 					  seriesData.push(datum);
 					}
 
+					console.log(""+i+": "+seriesData.length+"");
 					datasets.push({
 						label: key,
 						data: seriesData,
-						color: datasetColors[i],
+						borderColor: datasetColors[i],
 						backgroundColor: "rgba(0,0,0,0)",
 					});
 				}

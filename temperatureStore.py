@@ -1,5 +1,5 @@
-import random
-import datetime
+import time
+import ads1256
 import threading
 from timeSeriesStore import TimeSeriesStore
 
@@ -13,18 +13,19 @@ class TemperatureStore(TimeSeriesStore):
         if not self.INIT_BOARD:
             self.INIT_BOARD = True
             self._init_board()
-        threading.Thread(target=self.poll_temp, args=(self, 0, 5)).start()
+        for i in range(0,3):
+            threading.Thread(target=self.poll_temp, args=(i, 5)).start()
         
     def stop(self):
         self.RUNNING = False
 
-    def poll_temp(channel=0, sleep_s=1):
+    def poll_temp(self, channel=0, sleep_s=1):
         while self.RUNNING:
             temperature = ads1256.read_channel(channel)
             channel_name = "probe "+str(channel)
             self.add_temp(channel_name, temperature)
             time.sleep(sleep_s)
-            if not SELF.RUNNING:
+            if not self.RUNNING:
                 break
         print "done polling"
     
