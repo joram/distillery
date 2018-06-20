@@ -1,5 +1,6 @@
 import random
 import datetime
+import threading
 from timeSeriesStore import TimeSeriesStore
 
 class TemperatureStore(TimeSeriesStore):
@@ -9,9 +10,11 @@ class TemperatureStore(TimeSeriesStore):
 
     def start(self):
         self.RUNNING = True
-        if !self.INIT_BOARD:
+        if not self.INIT_BOARD:
+            self.INIT_BOARD = True
             self._init_board()
-
+        threading.Thread(target=self.poll_temp, args=(self, 0, 5)).start()
+        
     def stop(self):
         self.RUNNING = False
 
@@ -27,4 +30,7 @@ class TemperatureStore(TimeSeriesStore):
     
     def _init_board(self):
         print "initing board..."
+        gain = 1
+        sps = 25
+        ads1256.start(str(gain), str(sps))
         print "inited board..."
