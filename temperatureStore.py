@@ -3,35 +3,39 @@ import ads1256
 import threading
 from timeSeriesStore import TimeSeriesStore
 
+
+def init_board(gain=1, sps=25):
+    print "initing board..."
+    ads1256.start(str(gain), str(sps))
+    print "inited board..."
+
+init_board()
+
+
 class TemperatureStore(TimeSeriesStore):
 
     RUNNING = False
-    INIT_BOARD = False
+
+    def __init__(self, pin=0, sleep=5, calibrations=((0,0), (1,1))):
+        self.pin = pin
+        self.name = "Pin %d" % pin
+        self.sleep = sleep
+        self.calibrations = calibrations
 
     def start(self):
+        if self.RUNNING:
+            raise Exception("already running")
         self.RUNNING = True
-        if not self.INIT_BOARD:
-            self.INIT_BOARD = True
-            self._init_board()
-        for i in range(0,3):
-            threading.Thread(target=self.poll_temp, args=(i, 5)).start()
+        threading.Thread(target=self.poll_temp, args=()).start()
         
     def stop(self):
         self.RUNNING = False
 
-    def poll_temp(self, channel=0, sleep_s=1):
+    def poll_temp(self):
         while self.RUNNING:
-            temperature = ads1256.read_channel(channel)
-            channel_name = "probe "+str(channel)
-            self.add_temp(channel_name, temperature)
-            time.sleep(sleep_s)
+            value = ads1256.read_channel(self.pin)
+            self.add_temp(self.name, value)
+            time.sleep(self.sleep)
             if not self.RUNNING:
                 break
-        print "done polling"
-    
-    def _init_board(self):
-        print "initing board..."
-        gain = 1
-        sps = 25
-        ads1256.start(str(gain), str(sps))
-        print "inited board..."
+ 

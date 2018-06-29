@@ -26,16 +26,17 @@ class TimeSeriesStore(object):
                 self.add_temp(name, value, t)
                 prev = value
 
-    def json(self):
+    def json(self, dt=None):
         data = {}
         for key in self.TEMPERATURE_DATA:
             jsonVals = []
             vals = self.TEMPERATURE_DATA[key]
             for val in vals:
-                tStr = val["t"].strftime("%Y-%m-%dT%H:%M:%SZ") 
-                jsonVals.append({
-                    "t": tStr,
-                    "y": val["y"],
-                })
+                if dt is None or val["t"] > dt:
+                    tStr = val["t"].strftime("%Y-%m-%dT%H:%M:%SZ") 
+                    jsonVals.append({
+                        "t": tStr,
+                        "y": val["y"],
+                    })
             data[key] = jsonVals
         return data
