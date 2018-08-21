@@ -16,7 +16,6 @@ class TimeSeriesStore(object):
             "y": value,
         })
 
-
     def populate_demo(self, n=30):
         for name in ["T1", "T2", "T3"]:
             prev = random.uniform(18.0, 24.0)
