@@ -37,7 +37,6 @@ function initGraph(chartId){
 
 
 function updateGraph(){
-	console.log("updating");
 	$.ajax({
 		type: "GET",
 		data: {
@@ -69,6 +68,7 @@ function updateGraphData(data){
 		// add new data	
 		dataset = chart.data.datasets[probeIndex];
 		addData(data[probeName], dataset, probeIndex==0);
+		trimData(dataset, probeIndex==0);
 		probeIndex += 1;
 	});
 	chart.update();
@@ -95,8 +95,23 @@ function addData(data, dataset, addLabels){
 			if(addLabels){
 				chart.data.labels.push(dt);
 			}
-		}
+    }
 	});
 }
 
+function trimData(dataset, trimLabels){
+  maxDuration = moment.duration(30, "minutes"); 
+  now = moment($.now());
+	earliest = now-maxDuration;
 
+	dataset.data = dataset.data.filter(function( datum ) {
+	  t = moment(datum.t.getTime());
+		return t > earliest;
+  });
+
+	if(trimLabels){
+	  chart.data.labels = chart.data.labels.filter(function( label ) {
+		  return label > earliest;
+		});
+	}
+}
