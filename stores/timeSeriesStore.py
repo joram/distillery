@@ -10,7 +10,6 @@ class TimeSeriesStore(object):
             time = datetime.datetime.now()
         if name not in self.TEMPERATURE_DATA:
             self.TEMPERATURE_DATA[name] = []
-        print time, name, value
         self.TEMPERATURE_DATA[name].append({
             "t": time,
             "y": value,
@@ -39,3 +38,10 @@ class TimeSeriesStore(object):
                     })
             data[key] = jsonVals
         return data
+
+    def latest_value(self, name):
+        if len(self.TEMPERATURE_DATA) <= 0:
+            return -1
+        return self.TEMPERATURE_DATA[name][-1]["y"]
+
+
