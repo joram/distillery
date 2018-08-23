@@ -1,4 +1,4 @@
-# hardward
+# hardware
 [Motor Controller HAT](https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-dc-motors)
 [Analog to Digital HAT](https://www.waveshare.com/wiki/High-Precision_AD/DA_Board)
 
