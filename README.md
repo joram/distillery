@@ -5,6 +5,8 @@ The goals are to provide:
 - wash input rate control
 - output valve control based on a target temperature at a target location
 
+![hardware diagram](/docs/distillery.jpg)
+
 ## hardware
 - A raspberryPi
 - [Motor Controller HAT](https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-dc-motors)
