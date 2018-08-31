@@ -3,30 +3,24 @@ from button import Button
 from motor import getMotor
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 
+OPEN = Adafruit_MotorHAT.FORWARD
+CLOSE = Adafruit_MotorHAT.BACKWARD
+
 class Valve(object):
 
   def __init__(self, open_pin=21, closed_pin=20, motor_index=3):
     self.open_button = Button(open_pin)
     self.closed_button = Button(closed_pin)
     self.motor = getMotor(motor_index)
-    self.totalTicks = 0
+    self.totalTicks = 100000
     self.currentTick = 0
     self.currentDir = None
     self.tickSleep = 0.1
     self.tickSpeed = 50
     self.calibrate()
 
-
-  def test_calibration(self):
-    while not self.open_button.pressed:
-      self.tick_open()
-      print "%d%% open" % self.percent_open
-
-    while not self.closed_button.pressed:
-      self.tick_closed()
-      print "%d%% open" % self.percent_open
-
   def _tick(self, direction):
+    
     if self.currentDir != direction:
       self.motor.run(direction)
     self.currentDir = direction
@@ -35,21 +29,36 @@ class Valve(object):
     self.motor.setSpeed(0)
 
   def tick_open(self):
+    if self.open_button.pressed:
+      return False
     self.currentTick += 1
-    self._tick(Adafruit_MotorHAT.FORWARD)
+    self._tick(OPEN)
+    return True
   
   def tick_closed(self):
+    if self.closed_button.pressed:
+      return False
     self.currentTick -= 1
-    self._tick(Adafruit_MotorHAT.BACKWARD)
+    self._tick(CLOSE)
+    return True
 
   def calibrate(self):
-    while not self.open_button.pressed:
-      self.tick_open()
+    while self.tick_open():
+      continue
+
     self.totalTicks = 0
-    while not self.closed_button.pressed:
-      self.tick_closed()
+    while self.tick_closed():
       self.totalTicks += 1
     self.currentTick = 0
+
+  def open_to_percent(self, target):
+    if self.percent_open < target:
+      while self.percent_open < target:
+        self.tick_open()
+      return
+
+    while self.percent_open > target:
+      self.tick_closed
 
   @property
   def percent_open(self):
