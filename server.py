@@ -3,7 +3,8 @@ import json
 import datetime
 from flask import Flask, render_template, request
 from stores.temperatureStore import TemperatureStore
-
+from modules.button import Button
+from modules.valve import Valve
 
 calibrations = (
 #  (1.0, 3604000),
@@ -42,9 +43,12 @@ def api_temperature():
 if __name__ == '__main__':
     print "main!"
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
-        ts.start()
-        temperatureStores.append(ts)
+#        ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
+#        ts.start()
+#        temperatureStores.append(ts)
+#        button = Button(20)
+#        button = Button(21)i
+      valve = Valve()
 
     app.run(
         debug=True,

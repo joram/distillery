@@ -47,3 +47,10 @@ git clone https://github.com/fabiovix/py-ads1256.git
 cd py-ads1256
 sudo python setup.py install
 ```
+
+### enable the hardware to recognize the i2c device
+modify /boot/config.txt by appending
+```
+dtparam=i2c1=on
+dtmparam=i2c_arm=on
+```
