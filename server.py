@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import json
 import datetime
@@ -15,6 +16,7 @@ calibrations = (
 		
 
 temperatureStores = []
+valves = {}
 
 app = Flask(
     __name__,
@@ -22,35 +24,45 @@ app = Flask(
     static_folder="static",
 )
 
+@app.route('/api/valve/<name>', methods=['GET', 'POST'])
+def api_valve(name):
+  global valves
+  valve = valves[name]
+  if request.method == "GET":
+    return json.dumps(valve.json)
+  if request.method == "POST":
+    target = request.form.get("target")
+    valve.set_percent(int(target))
+    return ""
 
 @app.route('/')
 def temperature():
-    return render_template('temperature.html')
+  return render_template('index.html')
 
 
 @app.route('/api/temperatures')
 def api_temperature():
-    global temperatureStores
-    dt = request.args.get("dt")
-    if dt:
-        dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%SZ")
-    data = {}
-    for t in temperatureStores:
-        data[t.name] = t.json(dt)
-    return json.dumps(data)
+  global temperatureStores
+  dt = request.args.get("dt")
+  if dt:
+    dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%SZ")
+  data = {}
+  for t in temperatureStores:
+    data[t.name] = t.json(dt)
+  return json.dumps(data)
 
 
 if __name__ == '__main__':
-    print "main!"
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+  if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
 #        ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
 #        ts.start()
 #        temperatureStores.append(ts)
 #        button = Button(20)
 #        button = Button(21)i
-      valve = Valve()
+    global valves  
+    valves["input"] = Valve()
 
-    app.run(
-        debug=True,
-        host='0.0.0.0',
-    )
+  app.run(
+    debug=True,
+    host='0.0.0.0',
+  )

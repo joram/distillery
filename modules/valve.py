@@ -1,4 +1,5 @@
 import time
+import threading
 from button import Button
 from motor import getMotor
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
@@ -12,12 +13,50 @@ class Valve(object):
     self.open_button = Button(open_pin)
     self.closed_button = Button(closed_pin)
     self.motor = getMotor(motor_index)
-    self.totalTicks = 100000
+    self.totalTicks = 0
     self.currentTick = 0
     self.currentDir = None
     self.tickSleep = 0.1
     self.tickSpeed = 50
-    self.calibrate()
+    self.targetPercent = 0
+    self.fast_calibrate()
+    t = threading.Thread(target=self._adjust_valve, args=())
+    t.daemon = True
+    t.start()
+
+  def _adjust_valve(self):
+    while True:
+      if self.targetPercent == self.get_percent():
+        time.sleep(1)
+        continue
+      if self.targetPercent > self.get_percent():
+        self.tick_open()
+      if self.targetPercent < self.get_percent():
+        self.tick_closed()
+
+
+  def fast_calibrate(self):
+    while self.tick_closed():
+      continue
+    self.totalTicks = 167
+    self.currentTick = 0
+    self.targetPercent = 0
+
+  @property
+  def json(self):
+    return {
+      "status": self.status,
+      "current": self.get_percent(),
+      "target": self.targetPercent,
+    }
+
+  @property
+  def status(self):
+    if self.targetPercent > self.get_percent():
+      return "opening"
+    if self.targetPercent < self.get_percent():
+      return "closing"
+    return "idle"
 
   def _tick(self, direction):
     
@@ -51,15 +90,8 @@ class Valve(object):
       self.totalTicks += 1
     self.currentTick = 0
 
-  def open_to_percent(self, target):
-    if self.percent_open < target:
-      while self.percent_open < target:
-        self.tick_open()
-      return
+  def set_percent(self, target):
+    self.targetPercent = target
 
-    while self.percent_open > target:
-      self.tick_closed
-
-  @property
-  def percent_open(self):
+  def get_percent(self):
     return 100*self.currentTick/self.totalTicks
