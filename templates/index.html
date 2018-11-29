@@ -14,17 +14,32 @@
     <title>Distillery</title>
   </head>
   <body>
+  <div class="container">
+ 
+    <div class="row">
 
-    <div class="card">
-      <div class="card-header">Valve</div>
-      {% include 'valve.html' %}
+      <div class="col">
+        <div class="card">
+          <div class="card-header">Valve</div>
+            {% include 'valve.html' %}
+          </div>
+        </div>
+      </div>
+      
+      <div class="col"></div>
+   
+    </div>
+    <div class="row">
+
+      <div class="col">
+        <div class="card">
+          <div class="card-header">Temperatures</div>
+          {% include 'temperature.html' %}
+        </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">Temperatures</div>
-      {% include 'temperature.html' %}
-    </div>
-
+  </div>
   </body>
 </html>
 
