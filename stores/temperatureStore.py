@@ -1,20 +1,20 @@
 import time
-import ads1256
 import threading
-from timeSeriesStore import TimeSeriesStore
+from stores.timeSeriesStore import TimeSeriesStore
 
 ADS1256_INITIALIZED = False
 
 
 def init_board(gain=1, sps=25):
+    import ads1256
     global ADS1256_INITIALIZED
     if ADS1256_INITIALIZED:
-        print "not double initing board..."
+        print("not double initing board...")
         return
-    print "initing board..."
+    print("initing board...")
     ADS1256_INITIALIZED = True
     ads1256.start(str(gain), str(sps))
-    print "inited board..."
+    print("inited board...")
 
 
 class TemperatureStore(TimeSeriesStore):
@@ -50,6 +50,6 @@ class TemperatureStore(TimeSeriesStore):
         while self.RUNNING:
             value = ads1256.read_channel(self.pin)
             temp = self.m*value + self.b
-            print "pin:%d val:%f Celcius:%fc" % (self.pin, value, temp)
+            print(f"pin:{self.pin} val:{value} Celcius:{temp}c")
             self.add_value(temp)
             time.sleep(self.sleep)

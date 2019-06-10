@@ -18,6 +18,17 @@ The goals are to provide:
 
 ## setup
 
+### python env
+- install pyenv `curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash`
+- install python
+    ```
+    pyenv install 3.7.3
+    pyenv virtualenv 3.7.3 distillery
+    pyenv activate distillery
+    pip install -r requirements.txt
+    ```
+- create the file `scripts/.env` and inside it add:
+
 ### install motor hat library
 ```
 git clone https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git
