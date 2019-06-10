@@ -47,6 +47,31 @@ def temperature():
     return render_template('index.html')
 
 
+def _exec_sh(bashCommand):
+    import subprocess
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    return output, error
+
+
+def _git_up_to_date():
+    local_hash, error = _exec_sh("git rev-parse master")
+    origin_hash, error = _exec_sh("git rev-parse origin/master")
+    return local_hash == origin_hash
+
+
+@app.route('/api/git/status')
+def git_status():
+    return str(_git_up_to_date())
+
+
+@app.route('/api/git/update')
+def git_update():
+    print(_exec_sh("git pull origin/master"))
+    print(_exec_sh("pip install -r requirements.txt"))
+    return True
+
+
 @app.route('/api/temperatures')
 def api_temperature():
     global temperatureStores
@@ -61,10 +86,12 @@ def api_temperature():
 
 if __name__ == '__main__':
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
-        ts.start()
-        temperatureStores.append(ts)
+        # ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
+        # ts.start()
+        # temperatureStores.append(ts)
         valves["input"] = Valve()
+
+    print(_git_up_to_date())
 
     app.run(
       debug=True,
