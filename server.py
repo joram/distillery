@@ -54,15 +54,13 @@ def _exec_sh(bashCommand):
     return output, error
 
 
-def _git_up_to_date():
-    local_hash, error = _exec_sh("git rev-parse master")
-    origin_hash, error = _exec_sh("git rev-parse origin/master")
-    return local_hash == origin_hash
-
-
 @app.route('/api/git/status')
 def git_status():
-    return str(_git_up_to_date())
+    local_hash, error = _exec_sh("git rev-parse master")
+    origin_hash, error = _exec_sh("git rev-parse origin/master")
+    print(local_hash)
+    print(origin_hash)
+    return str(local_hash == origin_hash)
 
 
 @app.route('/api/git/update')
@@ -90,9 +88,6 @@ if __name__ == '__main__':
         # ts.start()
         # temperatureStores.append(ts)
         valves["input"] = Valve()
-
-    print(_git_up_to_date())
-
     app.run(
       debug=True,
       host='0.0.0.0',
