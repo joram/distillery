@@ -1,0 +1,38 @@
+<script type="text/javascript">
+
+    function git_status(resp){
+        if(resp==="True"){
+            $("#git-uptodate").show();
+            $("#git-outofdate").hide();
+        } else {
+            $("#git-uptodate").hide();
+            $("#git-outofdate").show();
+        }
+    }
+
+    function git_update(){
+        $.ajax({url: "/api/git/status", success: git_status});
+    }
+
+	$(document).ready(function(){
+        $("#git-check-button").on("click", function(){
+            $.ajax({url: "/api/git/status", success: git_status});
+        });
+        $("#git-update-button").on("click", function(){
+            $.ajax({url: "/api/git/update", success: git_update});
+        });
+	});
+</script>
+
+<div class="input-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Status</span>
+    </div>
+    <input id="git-check-button" class="valve" type="button" value="check"/>
+    <div id="git-uptodate">up-to-date</div>
+    <div id="git-outofdate" style="display:None;">
+        out-of-date
+        <input id="git-update-button" class="valve" type="button" value="update"/>
+    </div>
+</div>
+

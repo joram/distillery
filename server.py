@@ -65,9 +65,9 @@ def git_status():
 
 @app.route('/api/git/update')
 def git_update():
-    print(_exec_sh("git pull origin/master"))
-    print(_exec_sh("pip install -r requirements.txt"))
-    return True
+    _exec_sh("git pull origin master")
+    _exec_sh("pip install -r requirements.txt")
+    return str(True)
 
 
 @app.route('/api/temperatures')
@@ -87,7 +87,8 @@ if __name__ == '__main__':
         # ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
         # ts.start()
         # temperatureStores.append(ts)
-        valves["input"] = Valve()
+        # valves["input"] = Valve()
+        pass
     app.run(
       debug=True,
       host='0.0.0.0',
