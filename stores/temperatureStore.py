@@ -21,7 +21,7 @@ class TemperatureStore(TimeSeriesStore):
 
     RUNNING = False
 
-    def __init__(self, pin=0, sleep=5, calibrations=((0,0), (1,1))):
+    def __init__(self, pin=0, sleep=5, calibrations=((0, 0), (1, 1))):
         self.pin = pin
         self.name = "Pin %d" % pin
         self.sleep = sleep

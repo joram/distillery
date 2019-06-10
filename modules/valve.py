@@ -6,7 +6,7 @@ from modules.motor import get_motor
 
 class Valve(object):
 
-    def __init__(self, open_pin=21, closed_pin=20, motor_index=3):
+    def __init__(self, open_pin=21, closed_pin=20, motor_index=3, calibrate=True):
         from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
         self.OPEN = Adafruit_MotorHAT.FORWARD
         self.CLOSE = Adafruit_MotorHAT.BACKWARD
@@ -19,7 +19,8 @@ class Valve(object):
         self.tickSleep = 0.1
         self.tickSpeed = 50
         self.targetPercent = 0
-        # self.fast_calibrate()
+        if calibrate:
+            self.fast_calibrate()
         t = threading.Thread(target=self._adjust_valve, args=())
         t.daemon = True
         t.start()
@@ -91,4 +92,6 @@ class Valve(object):
         self.targetPercent = target
 
     def get_percent(self):
+        if self.totalTicks == 0:
+            return 0
         return 100*self.currentTick/self.totalTicks

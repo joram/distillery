@@ -1,3 +1,5 @@
 flask
 pytest
+RPi.GPIO
+fake_rpi
 -e git://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git#egg=Adafruit_MotorHAT
