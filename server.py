@@ -53,14 +53,11 @@ def api_temperature():
 
 
 if __name__ == '__main__':
-  if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-#        ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
-#        ts.start()
-#        temperatureStores.append(ts)
+ # if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+#    for i in range(0,4):
+#      temperatureStores.append(TemperatureStore(pin=i, sleep=2, calibrations=calibrations))
 #        button = Button(20)
 #        button = Button(21)i
-    global valves  
-    valves["input"] = Valve()
 
   app.run(
     debug=True,
