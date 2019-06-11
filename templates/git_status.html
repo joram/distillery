@@ -1,10 +1,12 @@
 <script type="text/javascript">
 
     function git_status(resp){
-        if(resp==="True"){
+        if(resp===""){
             $("#git-uptodate").show();
             $("#git-outofdate").hide();
         } else {
+            console.log(resp);
+            $("#git-outofdate-message").text(resp);
             $("#git-uptodate").hide();
             $("#git-outofdate").show();
         }
@@ -15,6 +17,7 @@
     }
 
 	$(document).ready(function(){
+	    $.ajax({url: "/api/git/status", success: git_status});
         $("#git-check-button").on("click", function(){
             $.ajax({url: "/api/git/status", success: git_status});
         });
@@ -29,8 +32,8 @@
     <input id="git-check-button" class="valve" type="button" value="check"/>
 </div>
 
-<div id="git-outofdate" class="alert alert-warning"  style="display:None;">
-    The code is out of date
+<div id="git-outofdate" class="alert alert-warning text-center"  style="display:None;">
+    <span id="git-outofdate-message">The code is out of date</span>
     <input id="git-update-button" class="valve" type="button" value="update"/>
 </div>
 

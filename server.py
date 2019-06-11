@@ -3,6 +3,8 @@ import datetime
 from flask import Flask, render_template, request
 import json
 import sys
+import os
+from git import Repo
 try:
     from RPi import GPIO
 except:
@@ -21,7 +23,8 @@ calibrations = (
   (73, 2816778),
 )
 
-
+repo_path = os.path.dirname(os.path.abspath(__file__))
+repo = Repo(repo_path)
 temperatureStores = []
 valves = {}
 
@@ -58,11 +61,13 @@ def _exec_sh(bashCommand):
 
 @app.route('/api/git/status')
 def git_status():
-    local_hash, error = _exec_sh("git rev-parse master")
-    origin_hash, error = _exec_sh("git rev-parse origin/master")
-    print(local_hash)
-    print(origin_hash)
-    return str(local_hash == origin_hash)
+    commits_behind = repo.iter_commits('master..origin/master')
+    num_commits_behind = len(list(commits_behind))
+    commits_ahead = repo.iter_commits('origin/master..master')
+    num_commits_ahead = len(list(commits_ahead))
+    if num_commits_behind == 0 and num_commits_ahead == 0:
+        return ""
+    return f"{num_commits_behind} behind and {num_commits_ahead} ahead"
 
 
 @app.route('/api/git/update')
