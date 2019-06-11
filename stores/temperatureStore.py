@@ -50,6 +50,6 @@ class TemperatureStore(TimeSeriesStore):
         while self.RUNNING:
             value = ads1256.read_channel(self.pin)
             temp = self.m*value + self.b
-            print(f"pin:{self.pin} val:{value} Celcius:{temp}c")
+            print("pin:%d val:%s Celcius:%sc" % (self.pin, value, temp))
             self.add_value(temp)
             time.sleep(self.sleep)
