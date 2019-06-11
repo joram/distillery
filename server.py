@@ -1,12 +1,14 @@
-#!/usr/bin/env python
-from mock import mock_raspberrypi
-mock_raspberrypi()
-
-
-import os
-import json
+#!/usr/bin/env python3
 import datetime
 from flask import Flask, render_template, request
+import json
+import sys
+try:
+    from RPi import GPIO
+except:
+    import fake_rpi
+    sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
+    sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
 from stores.temperatureStore import TemperatureStore
 from modules.button import Button
 from modules.valve import Valve
@@ -82,14 +84,8 @@ def api_temperature():
     return json.dumps(data)
 
 
-if __name__ == '__main__':
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        # ts = TemperatureStore(pin=0, sleep=2, calibrations=calibrations)
-        # ts.start()
-        # temperatureStores.append(ts)
-        # valves["input"] = Valve()
-        pass
+if __name__ == "__main__":
     app.run(
-      debug=True,
-      host='0.0.0.0',
+        debug=True,
+        host='0.0.0.0',
     )

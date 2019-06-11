@@ -24,15 +24,13 @@
 	});
 </script>
 
-<div class="input-group">
-    <div class="input-group-prepend">
-        <span class="input-group-text">Status</span>
-    </div>
+<div id="git-uptodate" class="alert alert-success" >
+    Everything is up to date
     <input id="git-check-button" class="valve" type="button" value="check"/>
-    <div id="git-uptodate">up-to-date</div>
-    <div id="git-outofdate" style="display:None;">
-        out-of-date
-        <input id="git-update-button" class="valve" type="button" value="update"/>
-    </div>
+</div>
+
+<div id="git-outofdate" class="alert alert-warning"  style="display:None;">
+    The code is out of date
+    <input id="git-update-button" class="valve" type="button" value="update"/>
 </div>
 

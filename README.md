@@ -18,6 +18,16 @@ The goals are to provide:
 
 ## setup
 
+### On the PI
+edit `/etc/rc.local`
+add the lines:
+```
+sudo touch /var/log/distillery.log
+sudo chmod 777 /var/log/distillery.log
+sudo python /home/pi/code/distillery/server.py > /var/log/distillery.log &
+```
+reboot the pi
+
 ### python env
 - install pyenv `curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash`
 - install python
