@@ -38,7 +38,9 @@ app = Flask(
 @app.route('/api/valve/<name>', methods=['GET', 'POST'])
 def api_valve(name):
     global valves
-    valve = valves[name]
+    valve = valves.get(name)
+    if valve is None:
+        return ""
     if request.method == "GET":
         return json.dumps(valve.json)
     if request.method == "POST":
@@ -90,6 +92,9 @@ def api_temperature():
 
 
 if __name__ == "__main__":
+    valves["input"] = Valve()
+    for i in range(0, 4):
+        temperatureStores.append(TemperatureStore(pin=i, sleep=2, calibrations=calibrations))
     app.run(
         debug=True,
         host='0.0.0.0',
