@@ -6,7 +6,11 @@ ADS1256_INITIALIZED = False
 
 
 def init_board(gain=1, sps=25):
-    import ads1256
+    try:
+        import ads1256
+    except:
+        print("unable to import ads1256")
+        return
     global ADS1256_INITIALIZED
     if ADS1256_INITIALIZED:
         print("not double initing board...")
@@ -46,9 +50,16 @@ class TemperatureStore(TimeSeriesStore):
         self.RUNNING = True
         t.start()
 
+    def _read_value(self):
+        if not ADS1256_INITIALIZED:
+            return 1
+        import ads1256
+        value = ads1256.read_channel(self.pin)
+        return value
+
     def poll_temp(self):
         while self.RUNNING:
-            value = ads1256.read_channel(self.pin)
+            value = self._read_value()
             temp = self.m*value + self.b
             print("pin:%d val:%s Celcius:%sc" % (self.pin, value, temp))
             self.add_value(temp)
