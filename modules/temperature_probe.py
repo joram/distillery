@@ -16,39 +16,31 @@ def get_analog_value_reader():
 class AnalogValuesReader(object):
 
     def __init__(self):
-        print("starting avr")
-        self._data = {}
-        for i in range(0, 8):
-            self._data[i] = []
-        self.max_data = 100
+        self.last_poll = None
+        self.min_seconds_between_polls = 1
+        self._data = None
+
         self.ADC = ADS1256.ADS1256()
         self.ADC.ADS1256_init()
-        t = threading.Thread(target=self._poll, args=())
-        t.daemon = True
-        self.RUNNING = True
-        t.start()
 
-    def _poll(self):
-        while True:
-            time.sleep(5)
-            self.take_reading()
+    def _debounced_poll(self):
+        now = datetime.datetime.now()
 
-    def take_reading(self):
-        readings = self.ADC.ADS1256_GetAll()
-        for i in range(0, 8):
-            self._data[i].append({
-                "reading": readings[i],
-                "time": datetime.datetime.now(),
-            })
-            while len(self._data[0]) > self.max_data:
-                del self._data[0]
+        if self.last_poll is None:
+            self.last_poll = now
+            self._data = self.ADC.ADS1256_GetAll()
+            return
 
-    def get_latest(self, pin):
-        if pin not in self._data:
-            return None
-        if len(self._data[pin]) == 0:
-            return None
-        return self._data[pin][-1]
+        delta = self.last_poll - now
+        if delta.total_seconds() > self.min_seconds_between_polls:
+            self.last_poll = now
+            self._data = self.ADC.ADS1256_GetAll()
+
+    def get_value(self, pin):
+        self._debounced_poll()
+        if self._data is None or pin not in self._data:
+            return None, None
+        return self._data[pin], self.last_poll
 
 
 class TemperatureProbe(object):
@@ -82,6 +74,13 @@ class TemperatureProbe(object):
                 })
         return jsonVals
 
+    def current_temperature(self):
+        value, timestamp = get_analog_value_reader().get_value(self.pin)
+        if value is None:
+            return None, None, None
+        temp = self.m * value + self.b
+        return temp, value, timestamp
+
     @property
     def latest_value(self):
         if len(self.TEMPERATURE_DATA) <= 0:
@@ -89,15 +88,9 @@ class TemperatureProbe(object):
         return self.TEMPERATURE_DATA[-1]["y"]
 
     def get_value(self):
-        data = get_analog_value_reader().get_latest(self.pin)
-        if data is None:
-            return
-        value = data["reading"]
-        time = data["time"]
-        temp = self.m * value + self.b
-        print("pin:%d val:%s Celcius:%sc" % (self.pin, value, temp))
-
+        temp, value, timestamp = self.current_temperature()
+        print("pin:%d v:%s t:%sc" % (self.pin, value, temp))
         self.TEMPERATURE_DATA.append({
-            "t": time,
+            "t": timestamp,
             "y": value,
         })
