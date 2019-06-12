@@ -1,7 +1,6 @@
 import time
 import threading
 from stores.timeSeriesStore import TimeSeriesStore
-import signal
 ADS1256_INITIALIZED = False
 
 

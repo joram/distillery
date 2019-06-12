@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 sudo apt-get install vim python-pip
 sudo apt-get install automake libtool
 sudo apt-get install git build-essential python-dev
