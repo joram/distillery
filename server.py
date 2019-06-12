@@ -70,7 +70,7 @@ def git_status():
     num_commits_ahead = len(list(commits_ahead))
     if num_commits_behind == 0 and num_commits_ahead == 0:
         return ""
-    return num_commits_behind+" behind and "+num_commits_ahead+" ahead"
+    return "%d behind and %d ahead" % (num_commits_behind, num_commits_ahead)
 
 
 @app.route('/api/git/update')
