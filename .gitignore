@@ -3,3 +3,4 @@
 *.sqlite3
 no_commit*
 .idea/*
+src*

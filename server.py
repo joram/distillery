@@ -93,7 +93,6 @@ def api_temperature():
 
 
 if __name__ == "__main__":
-    global temperatureProbes
     print("starting...")
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         print("werkzeug...")

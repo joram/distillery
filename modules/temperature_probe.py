@@ -16,6 +16,7 @@ def get_analog_value_reader():
 class AnalogValuesReader(object):
 
     def __init__(self):
+        print("starting avr")
         self._data = {}
         for i in range(0, 8):
             self._data[i] = []
@@ -41,11 +42,11 @@ class AnalogValuesReader(object):
             })
             while len(self._data[0]) > self.max_data:
                 del self._data[0]
-        import pprint
-        pprint.pprint(self._data)
 
     def get_latest(self, pin):
         if pin not in self._data:
+            return None
+        if len(self._data[pin]) == 0:
             return None
         return self._data[pin][-1]
 
@@ -70,6 +71,7 @@ class TemperatureProbe(object):
         self.b = float(y1) - self.m*float(x1)
 
     def json(self, dt=None):
+        self.get_value()
         jsonVals = []
         for val in self.TEMPERATURE_DATA:
             if dt is None or val["t"] > dt:
@@ -88,8 +90,10 @@ class TemperatureProbe(object):
 
     def get_value(self):
         data = get_analog_value_reader().get_latest(self.pin)
+        if data is None:
+            return
         value = data["reading"]
-        time = data["datetime"]
+        time = data["time"]
         temp = self.m * value + self.b
         print("pin:%d val:%s Celcius:%sc" % (self.pin, value, temp))
 
