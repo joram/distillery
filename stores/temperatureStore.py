@@ -16,8 +16,8 @@ def init_board(gain=1, sps=25):
         print("not double initing board...")
         return
     print("initing board...")
-    ADS1256_INITIALIZED = True
     ads1256.start(str(gain), str(sps))
+    ADS1256_INITIALIZED = True
     print("inited board...")
 
 
