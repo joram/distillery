@@ -8,6 +8,7 @@ from git import Repo
 try:
     from RPi import GPIO
 except:
+    print("faking rpi")
     import fake_rpi
     sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
     sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
@@ -69,7 +70,7 @@ def git_status():
     num_commits_ahead = len(list(commits_ahead))
     if num_commits_behind == 0 and num_commits_ahead == 0:
         return ""
-    return num_commits_behind+" behind and "+num_commits_ahead+" ahead"
+    return "%d behind and %d ahead" % (num_commits_behind, num_commits_ahead)
 
 
 @app.route('/api/git/update')
@@ -92,9 +93,14 @@ def api_temperature():
 
 
 if __name__ == "__main__":
-    valves["input"] = Valve()
-    for i in range(0, 4):
-        temperatureStores.append(TemperatureStore(pin=i, sleep=2, calibrations=calibrations))
+    print("starting...")
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        print("werkzeug...")
+#    valves["input"] = Valve()
+        for i in range(0, 4):
+            print("temperature probe "+str(i))
+            ts = TemperatureStore(pin=i, sleep=2, calibrations=calibrations)
+            temperatureStores.append(ts)
     app.run(
         debug=True,
         host='0.0.0.0',
