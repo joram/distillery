@@ -12,7 +12,7 @@ except:
     import fake_rpi
     sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
     sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
-from stores.temperatureStore import TemperatureStore
+from modules.temperature_probe import TemperatureProbe
 from modules.button import Button
 from modules.valve import Valve
 
@@ -26,7 +26,7 @@ calibrations = (
 
 repo_path = os.path.dirname(os.path.abspath(__file__))
 repo = Repo(repo_path)
-temperatureStores = []
+temperatureProbes = []
 valves = {}
 
 app = Flask(
@@ -82,25 +82,25 @@ def git_update():
 
 @app.route('/api/temperatures')
 def api_temperature():
-    global temperatureStores
+    global temperatureProbes
     dt = request.args.get("dt")
     if dt:
         dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%SZ")
     data = {}
-    for t in temperatureStores:
+    for t in temperatureProbes:
         data[t.name] = t.json(dt)
     return json.dumps(data)
 
 
 if __name__ == "__main__":
+    global temperatureProbes
     print("starting...")
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         print("werkzeug...")
-#    valves["input"] = Valve()
-        for i in range(0, 4):
+        for i in range(0, 8):
             print("temperature probe "+str(i))
-            ts = TemperatureStore(pin=i, sleep=2, calibrations=calibrations)
-            temperatureStores.append(ts)
+            ts = TemperatureProbe(pin=i, sleep=2, calibrations=calibrations)
+            temperatureProbes.append(ts)
     app.run(
         debug=True,
         host='0.0.0.0',
