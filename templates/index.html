@@ -24,6 +24,14 @@
           {% include 'valve.html' %}
         </div>
       </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-header">Coolant Pump</div>
+          {% with name="coolant" %}
+            {% include 'pump.html' %}
+          {% endwith %}
+        </div>
+      </div>
     </div>
     <br/>
 

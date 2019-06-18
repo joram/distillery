@@ -84,6 +84,27 @@ def git_update():
     return str(True)
 
 
+@app.route('/api/pump/<name>')
+def api_pump(name):
+
+    if name != "coolant":
+        return "500"
+    pump = coolant_pump
+
+    state = request.args.get("state")
+    if state not in ["on", "off"]:
+        return "500"
+
+    if state == "on":
+        print("turned pump "+name+" on")
+        pump.on()
+    if state == "off":
+        print("turned pump "+name+" off")
+        pump.off()
+
+    return "200"
+
+
 @app.route('/api/temperatures')
 def api_temperature():
     global temperatureProbes

@@ -1,0 +1,41 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+	    on = $("#pump_{{ name }}_on");
+	    console.log(on);
+	    off = $("#pump_{{ name }}_off");
+	    console.log(off);
+
+	    on.click(function(){
+	        $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/api/pump/{{ name }}?state=on",
+                success: function(){
+                    on.removeClass("btn-secondary");
+                    on.addClass("btn-primary");
+                    off.addClass("btn-secondary");
+                    off.removeClass("btn-primary");
+                }
+            })
+        });
+	    off.click(function(){
+	        $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/api/pump/{{ name }}?state=off",
+                success: function(){
+                    off.removeClass("btn-secondary");
+                    off.addClass("btn-primary");
+                    on.addClass("btn-secondary");
+                    on.removeClass("btn-primary");
+                }
+            })
+        })
+	});
+</script>
+
+<div class="btn-group" role="group">
+  <button id="pump_{{ name }}_on" type="button" class="btn btn-secondary">On</button>
+  <button id="pump_{{ name }}_off" type="button" class="btn btn-primary">Off</button>
+</div>
+
