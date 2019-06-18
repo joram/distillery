@@ -1,4 +1,4 @@
-#!/usr/bin/env ads1256
+#!/usr/bin/env python3
 import datetime
 from flask import Flask, render_template, request
 import json

@@ -26,19 +26,21 @@ class AnalogValuesReader(object):
     def _debounced_poll(self):
         now = datetime.datetime.now()
 
-        if self.last_poll is None:
-            self.last_poll = now
-            self._data = self.ADC.ADS1256_GetAll()
-            return
+        def _should_poll():
+            if self.last_poll is None:
+                return True
+            delta = now - self.last_poll
+            if delta.total_seconds() > self.min_seconds_between_polls:
+                return True
+            return False
 
-        delta = self.last_poll - now
-        if delta.total_seconds() > self.min_seconds_between_polls:
+        if _should_poll():
             self.last_poll = now
             self._data = self.ADC.ADS1256_GetAll()
 
     def get_value(self, pin):
         self._debounced_poll()
-        if self._data is None or pin not in self._data:
+        if self._data is None:
             return None, None
         return self._data[pin], self.last_poll
 
@@ -89,8 +91,10 @@ class TemperatureProbe(object):
 
     def get_value(self):
         temp, value, timestamp = self.current_temperature()
-        print("pin:%d v:%s t:%sc" % (self.pin, value, temp))
+        print("pin:%d v:%s t:%sc time:%s" % (self.pin, value, temp, timestamp))
+        if temp is None:
+            return
         self.TEMPERATURE_DATA.append({
             "t": timestamp,
-            "y": value,
+            "y": temp,
         })
