@@ -15,7 +15,8 @@ except:
 from modules.temperature_probe import TemperatureProbe
 from modules.button import Button
 from modules.valve import Valve
-
+from modules.relay import Relay
+import pins
 
 calibrations = (
 #  (1.0, 3604000),
@@ -28,6 +29,9 @@ repo_path = os.path.dirname(os.path.abspath(__file__))
 repo = Repo(repo_path)
 temperatureProbes = []
 valves = {}
+
+coolant_pump = Relay(pins.COOLANT_PUMP)
+wash_pump = Relay(pins.WASH_PUMP)
 
 app = Flask(
     __name__,
