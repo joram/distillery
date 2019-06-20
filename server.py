@@ -16,6 +16,7 @@ from modules.temperature_probe import TemperatureProbe
 from modules.button import Button
 from modules.valve import Valve
 from modules.relay import Relay
+from modules.bilge import Bilge
 import pins
 
 calibrations = (
@@ -121,6 +122,7 @@ if __name__ == "__main__":
     print("starting...")
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         print("werkzeug...")
+        bilge = Bilge(18)
         for i in range(0, 8):
             print("temperature probe "+str(i))
             ts = TemperatureProbe(pin=i, sleep=2, calibrations=calibrations)
