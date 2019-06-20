@@ -42,6 +42,6 @@ class Bilge(object):
   
   def not_floating(self):
     print("bilge is not full")
-    if self._enabled and False:
+    if self._enabled:
       self.pump.on()
 

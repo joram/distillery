@@ -40,10 +40,6 @@ app = Flask(
 )
 
 
-@app.route('/api/bilge', methods=['GET', 'POST'])
-def api_bilge():
-  return ""
-
 @app.route('/api/valve/<name>', methods=['GET', 'POST'])
 def api_valve(name):
     global valves
@@ -105,6 +101,25 @@ def api_pump(name):
     if state == "off":
         print("turned pump "+name+" off")
         pump.off()
+
+    return "200"
+
+
+@app.route('/api/wash', methods=["POST"])
+def api_wash():
+    rate = request.args.get("rate")
+    print("attempting to wash input rate updated to "+str(rate))
+    try:
+        rate = float(rate)
+    except:
+        return "500"
+
+    if rate < 0 or rate > 100:
+        return "500"
+
+    # TODO set wash input rate
+    print("wash input rate updated to "+str(rate))
+    wash_bilge.set_rate(rate)
 
     return "200"
 
