@@ -6,12 +6,12 @@ from modules.motor import get_motor
 
 class Valve(object):
 
-    def __init__(self, open_pin=21, closed_pin=20, motor_index=3, calibrate=True):
+    def __init__(self, open_pin=19, closed_pin=26, motor_index=3, calibrate=True):
         from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-        self.OPEN = Adafruit_MotorHAT.FORWARD
-        self.CLOSE = Adafruit_MotorHAT.BACKWARD
-        self.open_button = Button(open_pin)
-        self.closed_button = Button(closed_pin)
+        self.OPEN = Adafruit_MotorHAT.BACKWARD
+        self.CLOSE = Adafruit_MotorHAT.FORWARD
+        self.open_button = Button(open_pin, True)
+        self.closed_button = Button(closed_pin, True)
         self.motor = get_motor(motor_index)
         self.totalTicks = 0
         self.currentTick = 0
@@ -19,8 +19,8 @@ class Valve(object):
         self.tickSleep = 0.1
         self.tickSpeed = 50
         self.targetPercent = 0
-        if calibrate:
-            self.fast_calibrate()
+        self.fast_calibrate()
+#        self.calibrate()
         t = threading.Thread(target=self._adjust_valve, args=())
         t.daemon = True
         t.start()
@@ -29,10 +29,12 @@ class Valve(object):
         while True:
             if self.targetPercent == self.get_percent():
                 time.sleep(1)
-        if self.targetPercent > self.get_percent():
-            self.tick_open()
-        if self.targetPercent < self.get_percent():
-            self.tick_closed()
+            if self.targetPercent > self.get_percent():
+                print("opening...")
+                self.tick_open()
+            if self.targetPercent < self.get_percent():
+                print("closing...")
+                self.tick_closed()
 
     def fast_calibrate(self):
         while self.tick_closed():
@@ -66,29 +68,34 @@ class Valve(object):
         self.motor.setSpeed(0)
 
     def tick_open(self):
-        if self.open_button.pressed:
+        if self.open_button.is_pressed:
             return False
         self.currentTick += 1
         self._tick(self.OPEN)
         return True
 
     def tick_closed(self):
-        if self.closed_button.pressed:
+        if self.closed_button.is_pressed:
             return False
         self.currentTick -= 1
         self._tick(self.CLOSE)
         return True
 
     def calibrate(self):
+        print("calibrating valve...")
         while self.tick_open():
+            print("opening...")
             continue
 
         self.totalTicks = 0
         while self.tick_closed():
+            print("closing...")
             self.totalTicks += 1
         self.currentTick = 0
+        print("done calibrating valve (%d)..." % self.totalTicks)
 
     def set_percent(self, target):
+        print("targetting percent %s" % target)
         self.targetPercent = target
 
     def get_percent(self):

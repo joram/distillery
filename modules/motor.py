@@ -23,16 +23,15 @@ class MockDCMotor(object):
         pass
 
 
-def turn_off_motors(mock=True):
-    if mock:
-        return
+def turn_off_motors():
+    from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
     get_motorhat().getMotor(1).run(Adafruit_MotorHAT.RELEASE)
     get_motorhat().getMotor(2).run(Adafruit_MotorHAT.RELEASE)
     get_motorhat().getMotor(3).run(Adafruit_MotorHAT.RELEASE)
     get_motorhat().getMotor(4).run(Adafruit_MotorHAT.RELEASE)
 
 
-def get_motor(i, mock=True):
+def get_motor(i, mock=False):
     if mock:
         return MockDCMotor(None, i)
     if i not in [1, 2, 3, 4]:

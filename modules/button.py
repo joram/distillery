@@ -14,7 +14,7 @@ def pressed(pin):
 
 class Button(object):
 
-    def __init__(self, pin, sleep_ms=500):
+    def __init__(self, pin, inverse=False, sleep_ms=500):
         global BCM_SET
         global BUTTONS
 
@@ -25,6 +25,7 @@ class Button(object):
         self.pin = pin
         self.value = -1
         self.sleep_ms = sleep_ms
+        self.inverse = inverse
         BUTTONS[pin] = self
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(pin, GPIO.RISING, callback=pressed)
@@ -36,7 +37,7 @@ class Button(object):
             return
 
         self.value = value
-        if self.value == 1:
+        if self.is_pressed:
             self.pressed()
         else:
             self.unpressed()
@@ -49,4 +50,7 @@ class Button(object):
 
     @property
     def is_pressed(self):
+      if self.inverse:
         return self.value == 0
+      return self.value == 1
+        

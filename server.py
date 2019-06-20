@@ -30,9 +30,8 @@ repo_path = os.path.dirname(os.path.abspath(__file__))
 repo = Repo(repo_path)
 temperatureProbes = []
 valves = {}
-
-coolant_pump = Relay(pins.COOLANT_PUMP)
-wash_pump = Relay(pins.WASH_PUMP)
+wash_bilge = None
+coolant_pump = None
 
 app = Flask(
     __name__,
@@ -40,6 +39,10 @@ app = Flask(
     static_folder="static",
 )
 
+
+@app.route('/api/bilge', methods=['GET', 'POST'])
+def api_bilge():
+  return ""
 
 @app.route('/api/valve/<name>', methods=['GET', 'POST'])
 def api_valve(name):
@@ -122,8 +125,9 @@ if __name__ == "__main__":
     print("starting...")
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         print("werkzeug...")
-        bilge = Bilge(18)
-        for i in range(0, 8):
+        coolant_pump = Relay(pins.COOLANT_PUMP)
+        wash_bilge = Bilge(18)
+        for i in range(0, 0):
             print("temperature probe "+str(i))
             ts = TemperatureProbe(pin=i, sleep=2, calibrations=calibrations)
             temperatureProbes.append(ts)
