@@ -105,6 +105,24 @@ def api_pump(name):
     return "200"
 
 
+@app.route('/api/wash', methods=["POST"])
+def api_wash():
+    rate = request.args.get("rate")
+    print("attempting to wash input rate updated to "+str(rate))
+    try:
+        rate = float(rate)
+    except:
+        return "500"
+
+    if rate < 0 or rate > 100:
+        return "500"
+
+    # TODO set wash input rate
+    print("wash input rate updated to "+str(rate))
+
+    return "200"
+
+
 @app.route('/api/temperatures')
 def api_temperature():
     global temperatureProbes

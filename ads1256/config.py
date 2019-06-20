@@ -1,4 +1,6 @@
 import spidev
+
+SPI = None
 try:
     from RPi import GPIO
     SPI = spidev.SpiDev(0, 0)
@@ -32,14 +34,20 @@ def delay_ms(delaytime):
 
 
 def spi_writebyte(data):
+    if SPI is None:
+        return
     SPI.writebytes(data)
 
 
 def spi_readbytes(reg):
+    if SPI is None:
+        return [0,0,0,0,0,0,0,0,0,0]
     return SPI.readbytes(reg)
     
 
 def module_init():
+    if SPI is None:
+        return
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.setup(RST_PIN, GPIO.OUT)

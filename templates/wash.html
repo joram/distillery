@@ -1,0 +1,24 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	    $("#wash_input").on("change", function(){
+	        let rate = $("#wash_input").val();
+	        console.log("updated input rate", rate);
+	        $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/api/wash?rate="+rate,
+                success: function(){
+        	        $("#wash_input_label").text("( "+ rate + ' ml/min )');
+                }
+	        })
+        });
+	});
+</script>
+
+
+<label for="wash_input">
+    Wash Input Rate
+    <span id="wash_input_label">( 0 ml/min )</span>
+</label>
+<input id="wash_input" type="range" class="custom-range" min="0" max="100" step="0.5" value="0" />
