@@ -15,6 +15,7 @@ class Relay(object):
         self.pin = pin
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin, GPIO.OUT)
+        self.off()
 
     def on(self):
         GPIO.output(self.pin, GPIO.LOW)

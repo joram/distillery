@@ -3,12 +3,20 @@ import threading
 from RPi import GPIO
 
 BCM_SET = False
+BUTTONS = {}
+
+
+def pressed(pin):
+    global BUTTONS
+    button = BUTTONS[pin]
+    button.changed()
 
 
 class Button(object):
 
     def __init__(self, pin, sleep_ms=500):
         global BCM_SET
+        global BUTTONS
 
         if not BCM_SET:
             GPIO.setmode(GPIO.BCM)
@@ -17,16 +25,28 @@ class Button(object):
         self.pin = pin
         self.value = -1
         self.sleep_ms = sleep_ms
+        BUTTONS[pin] = self
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self._thread = threading.Thread(target=self._poll_thread, args=())
-        self._thread.daemon = True
-        self._thread.start()
+        GPIO.add_event_detect(pin, GPIO.RISING, callback=pressed)
+        self.changed()
 
-    def _poll_thread(self):
-        while True:
-            self.value = GPIO.input(self.pin)
-            time.sleep(self.sleep_ms/1000)
+    def changed(self):
+        value = GPIO.input(self.pin)
+        if value == self.value:
+            return
+
+        self.value = value
+        if self.value == 1:
+            self.pressed()
+        else:
+            self.unpressed()
+
+    def pressed(self):
+        print("pressed ", self.pin)
+
+    def unpressed(self):
+        print("unpressed ", self.pin)
 
     @property
-    def pressed(self):
+    def is_pressed(self):
         return self.value == 0
