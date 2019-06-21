@@ -18,7 +18,7 @@ from modules.valve import Valve
 from modules.relay import Relay
 from modules.bilge import Bilge
 import pins
-
+from wrappers.auth import requires_auth
 calibrations = (
 #  (1.0, 3604000),
 # (91.5, 2650000),
@@ -78,6 +78,7 @@ def git_status():
 
 
 @app.route('/api/git/update')
+@requires_auth
 def git_update():
     _exec_sh("git pull origin master")
     _exec_sh("pip install -r requirements.txt")
@@ -85,6 +86,7 @@ def git_update():
 
 
 @app.route('/api/pump/<name>')
+@requires_auth
 def api_pump(name):
 
     pumps = {
@@ -111,6 +113,7 @@ def api_pump(name):
 
 
 @app.route('/api/wash', methods=["POST"])
+@requires_auth
 def api_wash():
     rate = request.args.get("rate")
     print("attempting to wash input rate updated to "+str(rate))
