@@ -26,23 +26,29 @@
       </div>
       <div class="col">
         <div class="card">
-          <div class="card-header">Coolant Pump</div>
+          <div class="card-header">Pumps and Bilges</div>
+
           {% with name="coolant" %}
             {% include 'pump.html' %}
           {% endwith %}
+
+          {% with name="wash" %}
+            {% include "pump.html" %}
+          {% endwith %}
+
         </div>
       </div>
     </div>
     <br/>
 
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header">Temperatures</div>
-          {% include 'temperature.html' %}
-        </div>
-      </div>
-    </div>
+{#    <div class="row">#}
+{#      <div class="col">#}
+{#        <div class="card">#}
+{#          <div class="card-header">Temperatures</div>#}
+{#          {% include 'temperature.html' %}#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
 
   </div>
   </body>

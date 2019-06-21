@@ -1,16 +1,16 @@
 <script type="text/javascript">
-	$(document).ready(function(){
-	    on = $("#pump_{{ name }}_on");
-	    console.log(on);
-	    off = $("#pump_{{ name }}_off");
-	    console.log(off);
+    function setup_pump(name){
+        on = $(`#pump_${name}_on`);
+	    off = $(`#pump_${name}_off`);
 
 	    on.click(function(){
 	        $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "/api/pump/{{ name }}?state=on",
+                url: `/api/pump/${name}?state=on`,
                 success: function(){
+                    on = $(`#pump_${name}_on`);
+                    off = $(`#pump_${name}_off`);
                     on.removeClass("btn-secondary");
                     on.addClass("btn-primary");
                     off.addClass("btn-secondary");
@@ -22,8 +22,10 @@
 	        $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "/api/pump/{{ name }}?state=off",
+                url: `/api/pump/${name}?state=off`,
                 success: function(){
+                    on = $(`#pump_${name}_on`);
+                    off = $(`#pump_${name}_off`);
                     off.removeClass("btn-secondary");
                     off.addClass("btn-primary");
                     on.addClass("btn-secondary");
@@ -31,11 +33,19 @@
                 }
             })
         })
+    }
+
+	$(document).ready(function(){
+	    setup_pump("{{ name }}");
 	});
 </script>
 
-<div class="btn-group" role="group">
-  <button id="pump_{{ name }}_on" type="button" class="btn btn-secondary">On</button>
-  <button id="pump_{{ name }}_off" type="button" class="btn btn-primary">Off</button>
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <span class="pt-3 pl-2" for="id_{{ name }}">{{ name }}</span>
+    <div id="id_{{ name }}" class="btn-group m-2" role="group">
+          <button id="pump_{{ name }}_on" type="button" class="btn btn-secondary">On</button>
+          <button id="pump_{{ name }}_off" type="button" class="btn btn-primary">Off</button>
+    </div>
 </div>
+
 

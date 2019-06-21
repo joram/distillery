@@ -24,19 +24,23 @@ class MockDCMotor(object):
 
 
 def turn_off_motors():
-    from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-    get_motorhat().getMotor(1).run(Adafruit_MotorHAT.RELEASE)
-    get_motorhat().getMotor(2).run(Adafruit_MotorHAT.RELEASE)
-    get_motorhat().getMotor(3).run(Adafruit_MotorHAT.RELEASE)
-    get_motorhat().getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+    try:
+        from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+        get_motorhat().getMotor(1).run(Adafruit_MotorHAT.RELEASE)
+        get_motorhat().getMotor(2).run(Adafruit_MotorHAT.RELEASE)
+        get_motorhat().getMotor(3).run(Adafruit_MotorHAT.RELEASE)
+        get_motorhat().getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+    except:
+        pass
 
 
-def get_motor(i, mock=False):
-    if mock:
-        return MockDCMotor(None, i)
+def get_motor(i):
     if i not in [1, 2, 3, 4]:
         raise Exception("There are only four motors.")
-    return get_motorhat().getMotor(i)
+    try:
+        return get_motorhat().getMotor(i)
+    except:
+        return MockDCMotor(None, i)
 
 
 atexit.register(turn_off_motors)

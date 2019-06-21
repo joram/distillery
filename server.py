@@ -87,9 +87,14 @@ def git_update():
 @app.route('/api/pump/<name>')
 def api_pump(name):
 
-    if name != "coolant":
+    pumps = {
+        "coolant": coolant_pump,
+        "wash": wash_bilge,
+    }
+    pump = pumps.get(name)
+
+    if pump is None:
         return "500"
-    pump = coolant_pump
 
     state = request.args.get("state")
     if state not in ["on", "off"]:

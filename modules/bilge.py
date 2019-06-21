@@ -4,6 +4,7 @@ from modules.float_sensor import FloatSensor
 from modules.relay import Relay
 import pins
 
+
 class Bilge(object):
 
   def __init__(self, float_pin=18, valve_open_pin=19, valve_closed_pin=26, valve_motor_index=3, valve_calibrate=True):
@@ -11,16 +12,16 @@ class Bilge(object):
     self.valve = Valve(valve_open_pin, valve_closed_pin, valve_motor_index, valve_calibrate)
     self.rate = 0
     self._enabled = False
-    self.disable()
-    self.enable()
+    self.off()
+    self.on()
 #    self.set_rate(50)
     self.float_sensor = FloatSensor(float_pin, self.floating, self.not_floating)
     atexit.register(self.shutdown)
 
-  def enable(self):
+  def on(self):
     self._enabled = True
   
-  def disable(self):
+  def off(self):
     self._enabled = False
     self.pump.off()
     self.set_rate(0)
