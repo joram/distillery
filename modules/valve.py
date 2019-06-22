@@ -27,13 +27,13 @@ class Valve(object):
 
     def _adjust_valve(self):
         while True:
-            if self.targetPercent == self.get_percent():
+            if self.targetPercent == int(self.get_percent()):
                 time.sleep(1)
+                continue
             if self.targetPercent > self.get_percent():
-                print("opening...")
                 self.tick_open()
+                continue
             if self.targetPercent < self.get_percent():
-                print("closing...")
                 self.tick_closed()
 
     def fast_calibrate(self):
@@ -95,6 +95,7 @@ class Valve(object):
         print("done calibrating valve (%d)..." % self.totalTicks)
 
     def set_percent(self, target):
+        target = int(target)
         print("targetting percent %s" % target)
         self.targetPercent = target
 
