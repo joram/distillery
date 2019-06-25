@@ -13,12 +13,10 @@ except:
     sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
     sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
 from modules.temperature_probe import TemperatureProbe
-from modules.button import Button
-from modules.valve import Valve
 from modules.relay import Relay
 from modules.bilge import Bilge
 import pins
-from wrappers.auth import requires_auth
+from decorators.auth import requires_auth
 calibrations = (
 #  (1.0, 3604000),
 # (91.5, 2650000),
@@ -26,7 +24,7 @@ calibrations = (
   (73, 2816778),
 )
 
-repo_path = os.path.dirname(os.path.abspath(__file__))
+repo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 repo = Repo(repo_path)
 temperatureProbes = []
 valves = {}

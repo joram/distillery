@@ -1,4 +1,5 @@
 from ads1256 import config
+
 try:
     from RPi import GPIO
 except:

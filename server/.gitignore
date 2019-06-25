@@ -1,0 +1,6 @@
+*.pyc
+*.sqlite
+*.sqlite3
+no_commit*
+.idea/*
+src*

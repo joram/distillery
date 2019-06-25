@@ -7,7 +7,7 @@ from modules.motor import get_motor
 class Valve(object):
 
     def __init__(self, open_pin=19, closed_pin=26, motor_index=3, calibrate=True):
-        from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+        from Adafruit_MotorHAT import Adafruit_MotorHAT
         self.OPEN = Adafruit_MotorHAT.BACKWARD
         self.CLOSE = Adafruit_MotorHAT.FORWARD
         self.open_button = Button(open_pin, True)

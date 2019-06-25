@@ -1,7 +1,5 @@
 import datetime
 from ads1256 import ADS1256
-import threading
-import time
 
 AVR = None
 

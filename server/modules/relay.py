@@ -1,3 +1,4 @@
+import pins
 try:
     from RPi import GPIO
 except:
@@ -6,7 +7,6 @@ except:
     import sys
     sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
     sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
-
 
 
 class Relay(object):
@@ -23,6 +23,6 @@ class Relay(object):
     def off(self):
         GPIO.output(self.pin, GPIO.HIGH)
 
-import pins
+
 coolant_pump = Relay(pins.COOLANT_PUMP)
 wash_pump = Relay(pins.WASH_PUMP)
