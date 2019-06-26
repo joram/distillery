@@ -88,7 +88,7 @@ class TemperatureGraph extends React.Component {
             <Segment>
                 <Label className={"top attached"}>{this.props.name}</Label>
                 {/*<Line data={temperature_config.data} options={temperature_config.options} />*/}
-                <Line/>
+                <Line data={{}}/>
             </Segment>
         );
     }

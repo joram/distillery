@@ -11,9 +11,9 @@ class Bilge extends React.Component {
             <Segment>
                 <Label className={"top attached"}>{this.props.name}</Label>
                 <div>
-                    <EnableButton/>
-                    <Valve/>
-                    <FloatSensor/>
+                    <EnableButton  name={this.props.variable_name+"_enable_button"}/>
+                    <Valve  name={this.props.variable_name+"_valve"}/>
+                    <FloatSensor name={this.props.variable_name+"_float_sensor"}/>
                 </div>
             </Segment>
         );

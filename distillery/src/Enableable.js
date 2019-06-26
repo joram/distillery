@@ -3,6 +3,7 @@ import {Button} from 'semantic-ui-react'
 
 
 class EnableButton extends React.Component {
+
     render() {
         return (
             <span>
