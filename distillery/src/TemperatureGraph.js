@@ -52,21 +52,17 @@ class TemperatureGraph extends React.Component {
             let minDate = now - BUFFER;
             while(state.temperatureData[name].data.length >= 1){
                 if(state.temperatureData[name].data[0].x < minDate){
-                    let datum = state.temperatureData[name].data.shift();
-                    console.log("shifting", datum)
-                } else {
-                    console.log("done trimming");
-                    break
+                    state.temperatureData[name].data.shift();
+                    continue
                 }
+                break
             }
             while(state.labels.length >= 1){
                 if(state.labels[0] < minDate){
-                    let datum = state.labels.shift();
-                    console.log("shifting", datum)
-                } else {
-                    console.log("done trimming");
-                    break
+                    state.labels.shift();
+                    continue
                 }
+                break
             }
 
             this.setState(state);

@@ -1,10 +1,11 @@
+import os
 from threading import Lock
 import random
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../distillery/build")
 CORS(app)
 socket = SocketIO(app)
 thread = None
@@ -32,6 +33,19 @@ def temperature():
         i += 1
 
 
+# Serve React App
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    filepath = os.path.normpath(os.path.join(app.static_folder, path))
+    print("serving %s" % filepath)
+
+    if path != "" and os.path.exists(filepath):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
+
 @socket.on('connect')
 def on_connect():
 
@@ -49,6 +63,7 @@ def on_connect():
 
 
 if __name__ == '__main__':
-    socket.run(app)
+    # app.run(use_reloader=True, port=5000)
+    socket.run(app, use_reloader=True, port=5000)
 
 
