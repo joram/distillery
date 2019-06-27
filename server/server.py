@@ -1,55 +1,52 @@
+from threading import Lock
+import random
 from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit, send
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 CORS(app)
 socket = SocketIO(app)
+thread = None
+thread_lock = Lock()
 
 
-@socket.on('connect', namespace="dsf")
+def emit_value_update(module_name, variable_name, variable_value):
+    msg = {
+        "module": module_name,
+        "variable": variable_name,
+        "value": variable_value,
+    }
+    print("emitting ", msg)
+    socket.emit('value_update', msg, broadcast=True, namespace="")
+
+
+def temperature():
+    print("temperature thread")
+    while True:
+        val = float(random.choice(range(0, 1000)))/10
+        socket.sleep(1)
+        probe = random.choice(["temp1", "temp2", "temp3"])
+        emit_value_update("temperature_probes", probe, val)
+
+
+@socket.on('connect')
 def on_connect():
-    print('user connected')
-    emit('float_sensor', {"name": "poop", "floating": True}, broadcast=True)
 
-#
-# @socket.on('activate_user')
-# def on_active_user(data):
-#     user = data.get('username')
-#     emit('user_activated', {'user': user}, broadcast=True)
-#
-#
-# @socket.on('deactivate_user')
-# def on_inactive_user(data):
-#     user = data.get('username')
-#     emit('user_deactivated', {'user': user}, broadcast=True)
-#
-#
-# @socket.on('join_room')
-# def on_join(data):
-#     room = data['room']
-#     # join_room(room)
-#     emit('open_room', {'room': room}, broadcast=True)
-#
-#
-# @socket.on('send_message')
-# def on_chat_sent(data):
-#     room = data['room']
-#     emit('message_sent', data, room=room)
-#
+    # background thread emitting state
+    global thread
+    with thread_lock:
+        if thread is None:
+            thread = socket.start_background_task(temperature)
 
-@app.route("/")
-def home():
-    send("hello")
-    return "hi"
-
-
-# @socket.on('message', namespace="")
-# def handle_message(message):
-#     send(message)
-#     print("handling message:", message)
+    # initial state
+    emit_value_update("coolant", "enabled", True)
+    emit_value_update("wash_bilge", "enabled", False)
+    emit_value_update("wash_bilge", "floating", True)
+    emit_value_update("wash_bilge", "open", 50)
 
 
 if __name__ == '__main__':
     socket.run(app)
+
 

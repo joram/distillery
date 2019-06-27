@@ -17,10 +17,10 @@ class App extends React.Component {
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column width={8}>
-                            <Coolant name={"Coolant Loop"}/>
+                            <Coolant name={"Coolant Loop"} module={"coolant"}/>
                         </Grid.Column>
                         <Grid.Column width={8}>
-                            <Bilge name={"Wash Bilge"} variable_name={"wash_bilge"} style={{marginLeft: "3em"}}/>
+                            <Bilge name={"Wash Bilge"} module={"wash_bilge"} style={{marginLeft: "3em"}}/>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

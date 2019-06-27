@@ -4,12 +4,27 @@ import {Button} from 'semantic-ui-react'
 
 class EnableButton extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            enabled: this.props.enabled,
+        }
+    }
+
+
     render() {
+        if(this.state.enabled){
+            return (
+                <span>
+                    Enabled <Button>Disable</Button>
+                </span>
+            )
+
+        }
         return (
-            <span>
-                <Button className={"left attached"}>Enable</Button>
-                <Button className={"right attached"}>Disable</Button>
-            </span>
+                <span>
+                    Disabled <Button>Enable</Button>
+                </span>
         )
     }
 }
