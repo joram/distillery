@@ -23,11 +23,13 @@ def emit_value_update(module_name, variable_name, variable_value):
 
 def temperature():
     print("temperature thread")
+    i = 0
     while True:
         val = float(random.choice(range(0, 1000)))/10
         socket.sleep(1)
-        probe = random.choice(["temp1", "temp2", "temp3"])
+        probe = ["temp1", "temp2", "temp3"][i % 3]
         emit_value_update("temperature_probes", probe, val)
+        i += 1
 
 
 @socket.on('connect')

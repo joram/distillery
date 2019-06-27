@@ -14,6 +14,16 @@ class TemperatureGraph extends React.Component {
         }
     }
 
+    randomColor(){
+        return '#'+
+            Math.floor(Math.random()*16).toString(16)+
+            Math.floor(Math.random()*16).toString(16)+
+            Math.floor(Math.random()*16).toString(16)+
+            Math.floor(Math.random()*16).toString(16)+
+            Math.floor(Math.random()*16).toString(16)+
+            Math.floor(Math.random()*16).toString(16);
+    }
+
     update(data) {
         if(data.module === "temperature_probes") {
             let name = data.variable;
@@ -28,7 +38,7 @@ class TemperatureGraph extends React.Component {
                 state.temperatureData[name] = {
                     data: [],
                     label: name,
-                    borderColor: "#3cba9f",
+                    borderColor: this.randomColor(),
                     fill: false
                 };
             }
@@ -36,8 +46,28 @@ class TemperatureGraph extends React.Component {
             // add new data
             state.labels.push(now);
             state.temperatureData[name].data.push({x:now, y:val});
-            
+
             // trim data
+            var BUFFER = 30 * 60 * 1000; /* ms */
+            let minDate = now - BUFFER;
+            while(state.temperatureData[name].data.length >= 1){
+                if(state.temperatureData[name].data[0].x < minDate){
+                    let datum = state.temperatureData[name].data.shift();
+                    console.log("shifting", datum)
+                } else {
+                    console.log("done trimming");
+                    break
+                }
+            }
+            while(state.labels.length >= 1){
+                if(state.labels[0] < minDate){
+                    let datum = state.labels.shift();
+                    console.log("shifting", datum)
+                } else {
+                    console.log("done trimming");
+                    break
+                }
+            }
 
             this.setState(state);
             this.forceUpdate()
