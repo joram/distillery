@@ -1,36 +1,37 @@
+#!/usr/bin/env python3
+
+try:
+    from RPi import GPIO
+    valve_calibrate = True
+except:
+    print("faking rpi")
+    import fake_rpi
+    import sys
+    sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
+    sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
+    valve_calibrate = False
 import os
-from threading import Lock
-import random
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO
+import pins
+from modules import Relay, Bilge, TemperatureProbe
 
 app = Flask(__name__, static_folder="../distillery/build")
 CORS(app)
 socket = SocketIO(app)
-thread = None
-thread_lock = Lock()
-
-
-def emit_value_update(module_name, variable_name, variable_value):
-    msg = {
-        "module": module_name,
-        "variable": variable_name,
-        "value": variable_value,
-    }
-    print("emitting ", msg)
-    socket.emit('value_update', msg, broadcast=True, namespace="")
-
-
-def temperature():
-    print("temperature thread")
-    i = 0
-    while True:
-        val = float(random.choice(range(0, 1000)))/10
-        socket.sleep(1)
-        probe = ["temp1", "temp2", "temp3"][i % 3]
-        emit_value_update("temperature_probes", probe, val)
-        i += 1
+module_instances = [
+    Relay("coolant", pins.COOLANT_PUMP),
+    Bilge("wash_bilge", 18, valve_calibrate=valve_calibrate),
+    TemperatureProbe("probe 0", 0),
+    TemperatureProbe("probe 1", 1),
+    TemperatureProbe("probe 2", 2),
+    TemperatureProbe("probe 3", 3),
+    TemperatureProbe("probe 4", 4),
+    TemperatureProbe("probe 5", 6),
+    TemperatureProbe("probe 6", 5),
+    TemperatureProbe("probe 7", 7),
+]
 
 
 # Serve React App
@@ -48,18 +49,8 @@ def serve(path):
 
 @socket.on('connect')
 def on_connect():
-
-    # background thread emitting state
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socket.start_background_task(temperature)
-
-    # initial state
-    emit_value_update("coolant", "enabled", True)
-    emit_value_update("wash_bilge", "enabled", False)
-    emit_value_update("wash_bilge", "floating", True)
-    emit_value_update("wash_bilge", "open", 50)
+    for module in module_instances:
+        module.emit(socket)
 
 
 if __name__ == '__main__':

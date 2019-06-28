@@ -1,6 +1,7 @@
+import time
 import datetime
 from ads1256 import ADS1256
-
+from modules import BaseModule
 AVR = None
 
 
@@ -43,15 +44,16 @@ class AnalogValuesReader(object):
         return self._data[pin], self.last_poll
 
 
-class TemperatureProbe(object):
+class TemperatureProbe(BaseModule):
 
     TEMPERATURE_DATA = []
 
-    def __init__(self, pin=0, sleep=5, calibrations=((0, 0), (1, 1))):
+    def __init__(self, name, pin=0, sleep=5, calibrations=((0, 0), (1, 1))):
         self.pin = pin
-        self.name = "Pin %d" % pin
+        self.name = name
         self.sleep = sleep
         self.calibrations = calibrations
+        self.thread = None
 
         # pre-compute for temperature calc
         (d1, d2) = self.calibrations
@@ -61,6 +63,18 @@ class TemperatureProbe(object):
         xd = float(x2 - x1)
         self.m = yd/xd
         self.b = float(y1) - self.m*float(x1)
+
+    def emit(self, socket):
+        self._emit_value_update(socket, "temperature_probes", self.name, self.latest_value)
+        if self.thread is None:
+            # background thread emitting state
+            self.socket = socket
+            self.thread = socket.start_background_task(self.poll)
+
+    def poll(self):
+        while True:
+            time.sleep(1)
+            self.emit(self.socket)
 
     def json(self, dt=None):
         self.get_value()
