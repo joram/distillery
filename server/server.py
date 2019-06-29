@@ -21,8 +21,8 @@ app = Flask(__name__, static_folder="../distillery/build")
 CORS(app)
 socket = SocketIO(app)
 module_instances = [
-    Relay("coolant", pins.COOLANT_PUMP),
-    Bilge("wash_bilge", 18, valve_calibrate=valve_calibrate),
+#    Relay("coolant", pins.COOLANT_PUMP),
+#    Bilge("wash_bilge", 18, valve_calibrate=valve_calibrate),
     TemperatureProbe("probe 0", 0),
     TemperatureProbe("probe 1", 1),
     TemperatureProbe("probe 2", 2),
@@ -55,6 +55,6 @@ def on_connect():
 
 if __name__ == '__main__':
     # app.run(use_reloader=True, port=5000)
-    socket.run(app, use_reloader=True, port=5000)
+    socket.run(app, use_reloader=True, host="0.0.0.0", port=5000)
 
 
