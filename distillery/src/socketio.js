@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-let socket = io('ws://localhost:5000');
+let socket = io('ws://192.168.1.10:5000');
 
 function log_message(data){
     let {module, variable, value } = data;
