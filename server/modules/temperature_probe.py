@@ -36,12 +36,13 @@ class AnalogValuesReader(object):
         if _should_poll():
             self.last_poll = now
             self._data = self.ADC.ADS1256_GetAll()
+            print(self._data)
 
     def get_value(self, pin):
         self._debounced_poll()
         if self._data is None:
             return None, None
-        return self._data[pin], self.last_poll
+        return self._data[pin]
 
 
 class TemperatureProbe(BaseModule):
@@ -64,8 +65,12 @@ class TemperatureProbe(BaseModule):
         self.m = yd/xd
         self.b = float(y1) - self.m*float(x1)
 
+    @property
+    def value(self):
+        return get_analog_value_reader().get_value(self.pin)
+
     def emit(self, socket):
-        self._emit_value_update(socket, "temperature_probes", self.name, self.latest_value)
+        self._emit_value_update(socket, "temperature_probes", self.name, self.value)
         if self.thread is None:
             # background thread emitting state
             self.socket = socket
@@ -76,37 +81,3 @@ class TemperatureProbe(BaseModule):
             time.sleep(1)
             self.emit(self.socket)
 
-    def json(self, dt=None):
-        self.get_value()
-        jsonVals = []
-        for val in self.TEMPERATURE_DATA:
-            if dt is None or val["t"] > dt:
-                tStr = val["t"].strftime("%Y-%m-%dT%H:%M:%SZ")
-                jsonVals.append({
-                    "t": tStr,
-                    "y": val["y"],
-                })
-        return jsonVals
-
-    def current_temperature(self):
-        value, timestamp = get_analog_value_reader().get_value(self.pin)
-        if value is None:
-            return None, None, None
-        temp = self.m * value + self.b
-        return temp, value, timestamp
-
-    @property
-    def latest_value(self):
-        if len(self.TEMPERATURE_DATA) <= 0:
-            return -1
-        return self.TEMPERATURE_DATA[-1]["y"]
-
-    def get_value(self):
-        temp, value, timestamp = self.current_temperature()
-        print("pin:%d v:%s t:%sc time:%s" % (self.pin, value, temp, timestamp))
-        if temp is None:
-            return
-        self.TEMPERATURE_DATA.append({
-            "t": timestamp,
-            "y": temp,
-        })
