@@ -4,6 +4,17 @@ from ads1256 import ADS1256
 from modules import BaseModule
 AVR = None
 
+calibrations = {
+    0: ((28, 3486131), (73, 2816778)),
+    1: ((28, 3486131), (73, 2816778)),
+    2: ((28, 3486131), (73, 2816778)),
+    3: ((28, 3486131), (73, 2816778)),
+    4: ((28, 3486131), (73, 2816778)),
+    5: ((28, 3486131), (73, 2816778)),
+    6: ((28, 3486131), (73, 2816778)),
+    7: ((28, 3486131), (73, 2816778)),
+}
+
 
 def get_analog_value_reader():
     global AVR
@@ -47,16 +58,15 @@ class AnalogValuesReader(object):
 
 class TemperatureProbe(BaseModule):
 
-    TEMPERATURE_DATA = []
-
-    def __init__(self, name, pin=0, sleep=5, calibrations=((0, 0), (1, 1))):
+    def __init__(self, name, pin=0, sleep=5):
         self.pin = pin
         self.name = name
         self.sleep = sleep
-        self.calibrations = calibrations
         self.thread = None
+        self.socket = None
 
         # pre-compute for temperature calc
+        self.calibrations = calibrations[self.pin]
         (d1, d2) = self.calibrations
         (y1, x1) = d1
         (y2, x2) = d2
@@ -69,15 +79,17 @@ class TemperatureProbe(BaseModule):
     def value(self):
         return get_analog_value_reader().get_value(self.pin)
 
+    @property
+    def temperature(self):
+        return (self.m * self.value) + self.b
+
     def emit(self, socket):
-        self._emit_value_update(socket, "temperature_probes", self.name, self.value)
+        self._emit_value_update(socket, "temperature_probes", self.name, self.temperature)
         if self.thread is None:
-            # background thread emitting state
             self.socket = socket
             self.thread = socket.start_background_task(self.poll)
 
     def poll(self):
         while True:
-            time.sleep(1)
+            time.sleep(self.sleep)
             self.emit(self.socket)
-
