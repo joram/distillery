@@ -81,6 +81,7 @@ class TemperatureGraph extends React.Component {
     chartOptions() {
 
         return {
+            elements: { point: { radius: 0 } },
             scales: {
                 xAxes: [{
                     type: 'time',
