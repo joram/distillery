@@ -100,7 +100,7 @@ class TemperatureGraph extends React.Component {
             bezierCurve: true,
             bezierCurveTension: 0.4,
             pointDot: true,
-            pointDotRadius: 4,
+            pointDotRadius: 0,
             pointDotStrokeWidth: 1,
             pointHitDetectionRadius: 20,
             datasetStroke: true,
