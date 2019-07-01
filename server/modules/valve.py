@@ -18,7 +18,7 @@ class Valve(object):
         self.currentDir = None
         self.tickSleep = 0.1
         self.tickSpeed = 50
-        self.targetPercent = 0
+        self.target_percent = 0
 #        if calibrate:
 #            self.fast_calibrate()
         t = threading.Thread(target=self._adjust_valve, args=())
@@ -27,13 +27,13 @@ class Valve(object):
 
     def _adjust_valve(self):
         while True:
-            if self.targetPercent == int(self.get_percent()):
+            if self.target_percent == int(self.get_percent()):
                 time.sleep(1)
                 continue
-            if self.targetPercent > self.get_percent():
+            if self.target_percent > self.get_percent():
                 self.tick_open()
                 continue
-            if self.targetPercent < self.get_percent():
+            if self.target_percent < self.get_percent():
                 self.tick_closed()
 
     def fast_calibrate(self):
@@ -41,21 +41,21 @@ class Valve(object):
               continue
         self.totalTicks = 167
         self.currentTick = 0
-        self.targetPercent = 0
+        self.target_percent = 0
 
     @property
     def json(self):
         return {
             "status": self.status,
             "current": self.get_percent(),
-            "target": self.targetPercent,
+            "target": self.target_percent,
         }
 
     @property
     def status(self):
-        if self.targetPercent > self.get_percent():
+        if self.target_percent > self.get_percent():
             return "opening"
-        if self.targetPercent < self.get_percent():
+        if self.target_percent < self.get_percent():
             return "closing"
         return "idle"
 
@@ -97,7 +97,7 @@ class Valve(object):
     def set_percent(self, target):
         target = int(target)
         print("targetting percent %s" % target)
-        self.targetPercent = target
+        self.target_percent = target
 
     def get_percent(self):
         if self.totalTicks == 0:

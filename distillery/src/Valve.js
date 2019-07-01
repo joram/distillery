@@ -13,7 +13,12 @@ class Valve extends React.Component {
 
     render() {
         return (
-            <Input type='number' value={this.props.open} max={5} style={{marginLeft: "3px", marginRight: "3px"}}/>
+            <Input
+                type='number'
+                onChange={this.props.onChange}
+                value={this.props.open} min={0} max={100}
+                style={{marginLeft: "3px", marginRight: "3px"}}
+            />
         )
     }
 }

@@ -20,6 +20,7 @@ class Bilge extends React.Component {
 
     update(data) {
         if(this.props.module === data.module){
+            console.log(data)
             let state = this.state;
             state.enabled = data.variable === "enabled" ? data.value : state.enabled;
             state.floating = data.variable === "floating" ? data.value : state.floating;
@@ -29,13 +30,17 @@ class Bilge extends React.Component {
     }
 
     toggle(){
-        socket.emit("action", {module: this.props.module, data: !this.state.enabled})
+        socket.emit("action", {module: this.props.module, data: {enabled: !this.state.enabled}})
+    }
+
+    setRate(event, data){
+        socket.emit("action", {module: this.props.module, data: {set_rate: parseInt(data.value)}})
     }
 
     render() {
         let content = <div>
             <EnableButton onClick={this.toggle.bind(this)} enabled={this.state.enabled}/>
-            <Valve open={this.state.open}/>
+            <Valve onChange={this.setRate.bind(this)} open={this.state.open}/>
             <FloatSensor floating={this.state.floating}/>
         </div>;
 
