@@ -32,10 +32,19 @@ class Bilge(BaseModule):
       self.emit(self.socket)
 
   def emit(self, socket):
-    self._emit_value_update(socket, self.name, "enabled", self.pump._is_on)
+    self._emit_value_update(socket, self.name, "enabled", self._enabled)
     self._emit_value_update(socket, self.name, "floating", self.float_sensor.is_floating())
     self._emit_value_update(socket, self.name, "open", self.valve.get_percent())
     self.socket = socket
+
+  def process_action(self, action):
+    if action is True:
+      self.on()
+      return
+    if action is False:
+      self.off()
+      return
+    raise Exception("not a boolean", action)
 
   def set_rate(self, rate):
     print("draining bilge at %s ml/min" % rate)
@@ -50,14 +59,12 @@ class Bilge(BaseModule):
     self.pump.off()
 
   def floating(self):
-    print("bilge is full")
     if self._enabled:
       self.pump.off()
     if self.socket is not None:
       self.emit(self.socket)
 
   def not_floating(self):
-    print("bilge is not full")
     if self._enabled:
       self.pump.on()
     if self.socket is not None:

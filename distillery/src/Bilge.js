@@ -28,9 +28,13 @@ class Bilge extends React.Component {
         }
     }
 
+    toggle(){
+        socket.emit("action", {module: this.props.module, data: !this.state.enabled})
+    }
+
     render() {
         let content = <div>
-            <EnableButton enabled={this.state.enabled}/>
+            <EnableButton onClick={this.toggle.bind(this)} enabled={this.state.enabled}/>
             <Valve open={this.state.open}/>
             <FloatSensor floating={this.state.floating}/>
         </div>;

@@ -40,8 +40,10 @@ class Relay(BaseModule):
     def process_action(self, action):
         if action is True:
             self.on()
+            return
         if action is False:
             self.off()
+            return
         raise Exception("not a boolean", action)
 
 coolant_pump = Relay(pins.COOLANT_PUMP)
