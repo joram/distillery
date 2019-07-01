@@ -22,9 +22,13 @@ class Coolant extends React.Component {
         }
     }
 
+    toggle(){
+        socket.emit("action", {module: this.props.module, data: !this.state.enabled})
+    }
+
     render() {
         let content = <div>
-            <EnableButton enabled={this.state.enabled}/>
+            <EnableButton enabled={this.state.enabled} onClick={this.toggle.bind(this)} />
         </div>;
 
         if(this.state.enabled === null){

@@ -37,6 +37,12 @@ class Relay(BaseModule):
         self.socket = socket
         self._emit_value_update(socket, self.name, "enabled", self._is_on)
 
+    def process_action(self, action):
+        if action is True:
+            self.on()
+        if action is False:
+            self.off()
+        raise Exception("not a boolean", action)
 
 coolant_pump = Relay(pins.COOLANT_PUMP)
 wash_pump = Relay(pins.WASH_PUMP)

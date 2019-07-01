@@ -7,6 +7,7 @@ import socket from "./socketio";
 
 
 class Bilge extends React.Component {
+
     constructor(props) {
         super(props);
         socket.on('value_update', this.update.bind(this));

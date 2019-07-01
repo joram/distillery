@@ -37,21 +37,6 @@ app = Flask(
     static_folder="static",
 )
 
-
-@app.route('/api/valve/<name>', methods=['GET', 'POST'])
-def api_valve(name):
-    global valves
-    valve = valves.get(name)
-    if valve is None:
-        return ""
-    if request.method == "GET":
-        return json.dumps(valve.json)
-    if request.method == "POST":
-        target = request.form.get("target")
-        valve.set_percent(int(target))
-        return ""
-
-
 @app.route('/')
 def temperature():
     return render_template('index.html')
@@ -81,53 +66,6 @@ def git_update():
     _exec_sh("git pull origin master")
     _exec_sh("pip install -r requirements.txt")
     return str(True)
-
-
-@app.route('/api/pump/<name>')
-@requires_auth
-def api_pump(name):
-
-    pumps = {
-        "coolant": coolant_pump,
-        "wash": wash_bilge,
-    }
-    pump = pumps.get(name)
-
-    if pump is None:
-        return "500"
-
-    state = request.args.get("state")
-    if state not in ["on", "off"]:
-        return "500"
-
-    if state == "on":
-        print("turned pump "+name+" on")
-        pump.on()
-    if state == "off":
-        print("turned pump "+name+" off")
-        pump.off()
-
-    return "200"
-
-
-@app.route('/api/wash', methods=["POST"])
-@requires_auth
-def api_wash():
-    rate = request.args.get("rate")
-    print("attempting to wash input rate updated to "+str(rate))
-    try:
-        rate = float(rate)
-    except:
-        return "500"
-
-    if rate < 0 or rate > 100:
-        return "500"
-
-    # TODO set wash input rate
-    print("wash input rate updated to "+str(rate))
-    wash_bilge.set_rate(rate)
-
-    return "200"
 
 
 @app.route('/api/temperatures')

@@ -9,6 +9,7 @@ except:
     import sys
     sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
     sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
+    fake_rpi.toggle_print(False)
     valve_calibrate = False
 import os
 from flask import Flask, send_from_directory
@@ -51,6 +52,74 @@ def serve(path):
 def on_connect():
     for module in module_instances:
         module.emit(socket)
+
+
+@socket.on('action')
+def on_action(action):
+    print(action)
+    for module in module_instances:
+        module.receive_action(action["module"], action["data"])
+
+# @app.route('/api/valve/<name>', methods=['GET', 'POST'])
+# def api_valve(name):
+#     global valves
+#     valve = valves.get(name)
+#     if valve is None:
+#         return ""
+#     if request.method == "GET":
+#         return json.dumps(valve.json)
+#     if request.method == "POST":
+#         target = request.form.get("target")
+#         valve.set_percent(int(target))
+#         return ""
+#
+#
+# @app.route('/api/pump/<name>')
+# @requires_auth
+# def api_pump(name):
+#
+#     pumps = {
+#         "coolant": coolant_pump,
+#         "wash": wash_bilge,
+#     }
+#     pump = pumps.get(name)
+#
+#     if pump is None:
+#         return "500"
+#
+#     state = request.args.get("state")
+#     if state not in ["on", "off"]:
+#         return "500"
+#
+#     if state == "on":
+#         print("turned pump "+name+" on")
+#         pump.on()
+#     if state == "off":
+#         print("turned pump "+name+" off")
+#         pump.off()
+#
+#     return "200"
+#
+#
+# @app.route('/api/wash', methods=["POST"])
+# @requires_auth
+# def api_wash():
+#     rate = request.args.get("rate")
+#     print("attempting to wash input rate updated to "+str(rate))
+#     try:
+#         rate = float(rate)
+#     except:
+#         return "500"
+#
+#     if rate < 0 or rate > 100:
+#         return "500"
+#
+#     # TODO set wash input rate
+#     print("wash input rate updated to "+str(rate))
+#     wash_bilge.set_rate(rate)
+#
+#     return "200"
+#
 
 
 if __name__ == '__main__':

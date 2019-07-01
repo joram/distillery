@@ -58,7 +58,7 @@ class AnalogValuesReader(object):
 
 class TemperatureProbe(BaseModule):
 
-    def __init__(self, name, pin=0, sleep=1):
+    def __init__(self, name, pin=0, sleep=5):
         self.pin = pin
         self.name = name
         self.sleep = sleep

@@ -13,18 +13,18 @@ class EnableButton extends React.Component {
 
 
     render() {
-        if(this.state.enabled){
+        if(this.props.enabled){
             return (
-                <span>
-                    Enabled <Button>Disable</Button>
-                </span>
+                <>
+                    Enabled <Button onClick={this.props.onClick} >Disable</Button>
+                </>
             )
 
         }
         return (
-                <span>
-                    Disabled <Button>Enable</Button>
-                </span>
+                <>
+                    Disabled <Button onClick={this.props.onClick} >Enable</Button>
+                </>
         )
     }
 }
