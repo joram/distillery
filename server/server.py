@@ -24,13 +24,13 @@ module_instances = [
     Relay("coolant", pins.COOLANT_PUMP),
     Bilge("wash_bilge", 18, valve_calibrate=valve_calibrate),
     TemperatureProbe("probe 0", 0),
-    TemperatureProbe("probe 1", 1),
+    TemperatureProbe("probe 7", 1),
     TemperatureProbe("probe 2", 2),
     TemperatureProbe("probe 3", 3),
     TemperatureProbe("probe 4", 4),
     TemperatureProbe("probe 5", 6),
     TemperatureProbe("probe 6", 5),
-    TemperatureProbe("probe 7", 7),
+#    TemperatureProbe("probe 7", 7),
 ]
 
 
