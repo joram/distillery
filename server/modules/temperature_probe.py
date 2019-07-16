@@ -29,6 +29,7 @@ class AnalogValuesReader(object):
         self.last_poll = None
         self.min_seconds_between_polls = 1
         self._data = None
+        self._avg_data = None
 
         self.ADC = ADS1256.ADS1256()
         self.ADC.ADS1256_init()
@@ -47,13 +48,20 @@ class AnalogValuesReader(object):
         if _should_poll():
             self.last_poll = now
             self._data = self.ADC.ADS1256_GetAll()
+            if(self._avg_data == None):
+                self._avg_data = self._data
+
+            ratio = 0.01
+            for i in range(0, len(self._data)):
+                self._avg_data[i] = (1.0-ratio)*self._avg_data[i] + ratio*self._data[i]
+
             print(self._data)
 
     def get_value(self, pin):
         self._debounced_poll()
         if self._data is None:
             return None, None
-        return self._data[pin]
+        return self._avg_data[pin]
 
 
 class TemperatureProbe(BaseModule):
@@ -66,7 +74,8 @@ class TemperatureProbe(BaseModule):
         self.socket = None
 
         # pre-compute for temperature calc
-        self.calibrations = calibrations[self.pin]
+        #self.calibrations = calibrations[self.pin]
+        self.calibrations = calibrations[6]
         (d1, d2) = self.calibrations
         (y1, x1) = d1
         (y2, x2) = d2
