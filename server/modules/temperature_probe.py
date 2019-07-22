@@ -5,16 +5,19 @@ from modules import BaseModule
 AVR = None
 
 default_calibration = ((20, 3567560), (73, 2816778))
-calibrations = {
-0: ((21.2, 3566560.695), (94.9, 2305418.872)), # Actually physical pin 7
-1: ((21.2, 4896173.017), (94.9, 1458037.319)),
-2: ((21.2, 698830.4746), (94.9, 79212)),
-3: ((21.2, 708503.3898), (94.9, 80202.44681)),
-4: ((21.2, 701853.8983), (94.9, 80215.44681)),
-5: ((21.2, 714733.0678), (94.9, 79026.46809)),
-6: ((21.2, 706099.3898), (94.9, 79404.40426)),
-7: ((21.2, 2026497.712), (94.9, 2027174.404)), # Not Plugged In
-}
+
+
+t1 = 25.7
+v1 = [3540587.75, 2274642.625, 594823.375, 596040.625, 587538.25, 588527.625, 586106.25, 588199.625]
+
+# TODO: redo
+t2 = 94.9
+v2 = [2305418.872, 1458037.319, 79212, 80202.44681, 80215.44681, 79026.46809, 79404.40426, 2027174.404]
+
+calibrations = {}
+for i in range(0, 8):
+  calibrations[i] = ((t1, v1[i]), (t2+1, v2[i]+1))
+
 
 def get_analog_value_reader():
     global AVR
@@ -72,6 +75,7 @@ class TemperatureProbe(BaseModule):
         self.sleep = sleep
         self.thread = None
         self.socket = None
+        self.offset = 0
 
         # pre-compute for temperature calc
         #self.calibrations = calibrations[self.pin]
@@ -90,13 +94,18 @@ class TemperatureProbe(BaseModule):
 
     @property
     def temperature(self):
-        return (self.m * self.value) + self.b
+        return (self.m * self.value) + self.b + self.offset
 
     def emit(self, socket):
         self._emit_value_update(socket, "temperature_probes", self.name, self.temperature)
         if self.thread is None:
             self.socket = socket
             self.thread = socket.start_background_task(self.poll)
+
+    def receive_action(self, module_name, data):
+        if module_name == "temperature":
+            actual_temp = float(data["current_temperature"])
+            self.offset += actual_temp - self.temperature
 
     def poll(self):
         while True:
