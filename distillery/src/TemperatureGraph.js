@@ -1,5 +1,5 @@
 import React from 'react';
-import {Label, Segment} from 'semantic-ui-react'
+import {Label, Segment, Button, Input} from 'semantic-ui-react'
 import {Line} from 'react-chartjs-2';
 import socket from "./socketio";
 
@@ -8,6 +8,7 @@ class TemperatureGraph extends React.Component {
     constructor(props) {
         super(props);
         socket.on('value_update', this.update.bind(this));
+        this.calibration_value = 20;
         this.state = {
             temperatureData: {},
             labels: [],
@@ -111,10 +112,20 @@ class TemperatureGraph extends React.Component {
         }
     }
 
+    calibrateTemperature(event) {
+        socket.emit("action", {module: "temperature", data: {current_temperature: this.calibration_value}})
+    }
+
+    temperatureChange(event) {
+        this.calibration_value = event.target.value;
+    }
+
     render() {
         return (
             <Segment>
                 <Label className={"top attached"}>{this.props.name}</Label>
+                <Input id="calibration_temperature" type="number" onChange={this.temperatureChange.bind(this)}/>
+                <Button onClick={this.calibrateTemperature.bind(this)}>Set</Button>
                 <div>
                     <Line
                         data={this.chartData()}
