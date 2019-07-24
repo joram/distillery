@@ -10,10 +10,12 @@ class FloatSensor(Button):
     
     def pressed(self):
         if self.on_float is not None:
+            print("floating %s" % self.pin)
             self.on_float()
 
     def unpressed(self):
         if self.on_drop is not None:
+            print("not floating %s" % self.pin)
             self.on_drop()
 
     def is_floating(self):

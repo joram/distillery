@@ -4,15 +4,10 @@ from ads1256 import ADS1256
 from modules import BaseModule
 AVR = None
 
-default_calibration = ((20, 3567560), (73, 2816778))
-
-
-t1 = 25.5
-v1 = [3536302.222, 2002645.778, 595729.6667, 597739.4444, 588461.4444, 587836.3333, 585127.2222, 583821.7778]
-
-# TODO: redo
-t2 = 94.9
-v2 = [2305418.872, 1458037.319, 79212, 80202.44681, 80215.44681, 79026.46809, 79404.40426, 2027174.404]
+t1 = 25.8
+t2 = 90.1
+v1 = [3530774, 2744356, 592423, 598234, 593921, 596942, 593404, 594778]
+v2 = [2491847, 1502957, 82653, 83140, 82373, 82184,  82375, 82665]
 
 calibrations = {}
 for i in range(0, 8):
@@ -50,7 +45,10 @@ class AnalogValuesReader(object):
 
         if _should_poll():
             self.last_poll = now
-            self._data = self.ADC.ADS1256_GetAll()
+            try:
+              self._data = self.ADC.ADS1256_GetAll()
+            except:
+              return
             if(self._avg_data == None):
                 self._avg_data = self._data
 

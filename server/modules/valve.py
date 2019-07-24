@@ -19,8 +19,9 @@ class Valve(object):
         self.tickSleep = 0.1
         self.tickSpeed = 50
         self.target_percent = 0
-#        if calibrate:
-#            self.fast_calibrate()
+        if calibrate:
+            #self.calibrate()
+            self.fast_calibrate(183)
         t = threading.Thread(target=self._adjust_valve, args=())
         t.daemon = True
         t.start()
@@ -36,10 +37,10 @@ class Valve(object):
             if self.target_percent < self.get_percent():
                 self.tick_closed()
 
-    def fast_calibrate(self):
+    def fast_calibrate(self, total_ticks):
         while self.tick_closed():
               continue
-        self.totalTicks = 167
+        self.totalTicks = total_ticks
         self.currentTick = 0
         self.target_percent = 0
 
