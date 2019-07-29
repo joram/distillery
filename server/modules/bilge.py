@@ -10,7 +10,7 @@ class Bilge(BaseModule):
 
   def __init__(self, name, float_pin=18, valve_open_pin=26, valve_closed_pin=19, valve_motor_index=3, valve_calibrate=True):
     self.name = name
-    self.pump = Relay(pins.WASH_PUMP)
+    self.pump = Relay("wash", pin=pins.WASH_PUMP)
     self.valve = Valve(valve_open_pin, valve_closed_pin, valve_motor_index, valve_calibrate)
     self.rate = 0
     self.socket = None

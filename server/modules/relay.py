@@ -13,6 +13,7 @@ except:
 class Relay(BaseModule):
 
     def __init__(self, name, pin=21):
+        print(name)
         self.name = name
         self.pin = pin
         GPIO.setmode(GPIO.BCM)
@@ -46,5 +47,5 @@ class Relay(BaseModule):
             return
         raise Exception("not a boolean", action)
 
-coolant_pump = Relay(pins.COOLANT_PUMP)
-wash_pump = Relay(pins.WASH_PUMP)
+#coolant_pump = Relay(pins.COOLANT_PUMP)
+#wash_pump = Relay(pins.WASH_PUMP)
