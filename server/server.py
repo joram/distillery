@@ -18,7 +18,6 @@ from flask_socketio import SocketIO
 import pins
 from modules import Relay, Bilge, TemperatureProbe
 
-valve_calibrate = False  # TODO: this was for debugging
 app = Flask(__name__, static_folder="../distillery/build")
 CORS(app)
 socket = SocketIO(app)
