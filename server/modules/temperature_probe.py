@@ -4,10 +4,21 @@ from ads1256 import ADS1256
 from modules import BaseModule
 AVR = None
 
-t1 = 25.8
+t1 = 24.5
 t2 = 90.1
-v1 = [3530774, 2744356, 592423, 598234, 593921, 596942, 593404, 594778]
+v1 = [3533986, 1350945, 586171, 588169,  586947, 565477, 568505, 582163]
 v2 = [2491847, 1502957, 82653, 83140, 82373, 82184,  82375, 82665]
+
+manual_offsets = [
+  406.04660360974236,
+  105.97881303862346,
+  1.1974796259359834,
+  1.3760591248327927,
+  0.8412631428102344,
+  -1.1406820103757838,
+  -1.3457162098306839,
+  1.8153685321868664,
+]
 
 calibrations = {}
 for i in range(0, 8):
@@ -73,7 +84,7 @@ class TemperatureProbe(BaseModule):
         self.sleep = sleep
         self.thread = None
         self.socket = None
-        self.offset = 0
+        self.offset = manual_offsets[pin]
 
         # pre-compute for temperature calc
         #self.calibrations = calibrations[self.pin]
@@ -104,6 +115,7 @@ class TemperatureProbe(BaseModule):
         if module_name == "temperature":
             actual_temp = float(data["current_temperature"])
             self.offset += actual_temp - self.temperature
+            print("probe calibration", self.pin, self.offset)
 
     def poll(self):
         while True:
