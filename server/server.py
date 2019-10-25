@@ -2,6 +2,7 @@
 
 try:
     from RPi import GPIO
+    GPIO.setwarnings(False)
     valve_calibrate = True
 except:
     print("faking rpi")
@@ -18,13 +19,13 @@ from flask_socketio import SocketIO
 import pins
 from modules import Relay, Bilge, TemperatureProbe
 
-valve_calibrate = False  # TODO: this was for debugging
 app = Flask(__name__, static_folder="../distillery/build")
 CORS(app)
 socket = SocketIO(app)
 module_instances = [
     Relay(name="coolant", pin=pins.COOLANT_PUMP),
-    Bilge("wash_bilge", 18, valve_calibrate=valve_calibrate),
+#    Bilge("wash_bilge", 18, valve_calibrate=valve_calibrate),
+    Bilge("wash_bilge", 18, valve_calibrate=False),
     TemperatureProbe("probe 0", 0),
     TemperatureProbe("probe 1", 1),
     TemperatureProbe("probe 2", 2),
