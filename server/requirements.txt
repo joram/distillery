@@ -1,9 +1,3 @@
-eventlet
-flask
-flask-cors
-flask-socketio
-gitpython
+-r requirements.shared.txt
 piADC
 RPi.GPIO
-
--e git://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git#egg=Adafruit_MotorHAT
