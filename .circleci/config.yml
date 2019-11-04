@@ -32,6 +32,7 @@ jobs:
           name: run tests
           command: |
             cd server
+            export PYTHONPATH=$PYTHONPATH:.
             . venv/bin/activate
             pytest
 
