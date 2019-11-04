@@ -8,15 +8,16 @@ class FloatSensor(Button):
         self.on_drop = on_drop
         Button.__init__(self, pin)
     
-    def pressed(self):
+    def pressed_callback(self):
         if self.on_float is not None:
             print("floating %s" % self.pin)
             self.on_float()
 
-    def unpressed(self):
+    def unpressed_callback(self):
         if self.on_drop is not None:
             print("not floating %s" % self.pin)
             self.on_drop()
 
+    @property
     def is_floating(self):
         return self.is_pressed

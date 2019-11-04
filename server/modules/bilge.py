@@ -33,7 +33,7 @@ class Bilge(BaseModule):
 
   def emit(self, socket):
     self._emit_value_update(socket, self.name, "enabled", self._enabled)
-    self._emit_value_update(socket, self.name, "floating", self.float_sensor.is_floating())
+    self._emit_value_update(socket, self.name, "floating", self.float_sensor.is_floating)
     self._emit_value_update(socket, self.name, "open", self.valve.target_percent)
     self.socket = socket
 

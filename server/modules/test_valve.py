@@ -1,6 +1,3 @@
-# from mock import mock_raspberrypi
-# mock_raspberrypi()
-
 from modules.valve import Valve
 
 

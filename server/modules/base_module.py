@@ -16,7 +16,6 @@ class BaseModule(object):
             "variable": variable_name,
             "value": variable_value,
         }
-        # print("emitting ", msg)
         socket.emit('value_update', msg, broadcast=True, namespace="")
 
     def receive_action(self, module_name, data):

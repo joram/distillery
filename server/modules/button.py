@@ -1,12 +1,10 @@
-import time
-import threading
 from wrapped_rpi_gpio import GPIO
 
 BCM_SET = False
 BUTTONS = {}
 
 
-def pressed(pin):
+def _pin_changed(pin):
     global BUTTONS
     button = BUTTONS[pin]
     button.changed()
@@ -28,25 +26,28 @@ class Button(object):
         self.inverse = inverse
         BUTTONS[pin] = self
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(pin, GPIO.RISING, callback=pressed)
+        GPIO.add_event_detect(pin, GPIO.RISING, callback=_pin_changed)
         self.changed()
 
     def changed(self):
         value = GPIO.input(self.pin)
         if value == self.value:
             return
-
         self.value = value
+
         if self.is_pressed:
-            self.pressed()
-        else:
-            self.unpressed()
+            print("pressed ", self.pin)
+            self.pressed_callback()
+            return
 
-    def pressed(self):
-        print("pressed ", self.pin)
-
-    def unpressed(self):
         print("unpressed ", self.pin)
+        self.unpressed_callback()
+
+    def pressed_callback(self):
+        pass
+
+    def unpressed_callback(self):
+        pass
 
     @property
     def is_pressed(self):
