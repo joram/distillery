@@ -1,6 +1,6 @@
 import time
 import threading
-from RPi import GPIO
+from wrapped_rpi_gpio import *
 
 BCM_SET = False
 BUTTONS = {}

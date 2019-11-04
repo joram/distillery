@@ -2,8 +2,8 @@ eventlet
 flask
 flask-cors
 flask-socketio
-RPi.GPIO
 gitpython
-#piADC
+piADC
+RPi.GPIO
 
 -e git://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git#egg=Adafruit_MotorHAT
