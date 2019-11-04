@@ -1,6 +1,6 @@
-from mock import mock_raspberrypi
+# from mock import mock_raspberrypi
 
-mock_raspberrypi()
+# mock_raspberrypi()
 
 from valve import Valve
 
