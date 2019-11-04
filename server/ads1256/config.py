@@ -1,8 +1,8 @@
-import spidev
 
 SPI = None
 try:
     from RPi import GPIO
+    import spidev
     SPI = spidev.SpiDev(0, 0)
 except:
     print("faking rpi")

@@ -1,14 +1,5 @@
 from ads1256 import config
-
-try:
-    from RPi import GPIO
-except:
-    print("faking rpi")
-    import fake_rpi
-    import sys
-    sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
-    sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
-
+from wrapped_rpi_gpio import *
 
 
 ScanMode = 0

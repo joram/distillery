@@ -38,9 +38,9 @@ jobs:
             pytest
 
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+          path: server/test-reports
+          destination: server/test-reports
 
       - store_test_results:
-          path: test-results
-          destination: test-results
+          path: server/test-results
+          destination: server/test-results

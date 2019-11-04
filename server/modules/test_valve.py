@@ -1,8 +1,7 @@
 # from mock import mock_raspberrypi
-
 # mock_raspberrypi()
 
-from valve import Valve
+from modules.valve import Valve
 
 
 def test_get_percent_zero_ticks():
