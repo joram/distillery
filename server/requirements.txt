@@ -5,4 +5,5 @@ flask-socketio
 RPi.GPIO
 gitpython
 #piADC
+
 -e git://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git#egg=Adafruit_MotorHAT
