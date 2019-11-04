@@ -1,3 +1,4 @@
 -r requirements.shared.txt
 pytest
 fake_rpi
+mock
