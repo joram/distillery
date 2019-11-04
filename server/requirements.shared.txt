@@ -4,8 +4,7 @@ flask
 flask-cors
 flask-socketio
 gitpython
-piADC
-RPi.GPIO
+
 
 
 
